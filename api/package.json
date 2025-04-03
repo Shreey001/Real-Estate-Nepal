@@ -1,0 +1,26 @@
+{
+  "name": "api",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prisma": "^5.10.2"
+  },
+  "scripts": {
+    "dev": "bun --watch app.js",
+    "ninja": "console-ninja node --watch app.js",
+    "start": "bun app.js",
+    "generate": "npx prisma generate",
+    "push": "npx prisma db push",
+    "studio": "npx prisma studio"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.5.0",
+    "bcrypt": "^5.1.1",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.9"
+  }
+}
