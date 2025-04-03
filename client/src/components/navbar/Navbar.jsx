@@ -9,9 +9,9 @@ function Navbar() {
   return (
     <nav>
       <div className="left">
-        <a href="/" className="logo">
-          <img src="/logo.png" alt="" />
-          <span>LamaEstate</span>
+        <a className="logo" href="/">
+          <img src="/logo1.png" alt="logo" />
+          {/* <span>InfinityEstate</span> */}
         </a>
         <a href="/">Home</a>
         <a href="/">About</a>
