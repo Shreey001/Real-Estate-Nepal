@@ -32,7 +32,8 @@ nav {
       gap: 10px;
 
       img {
-        width: 28px;
+        width: 120px;
+        height: 90px;
       }
 
       span {
@@ -52,7 +53,6 @@ nav {
     align-items: center;
     justify-content: flex-end;
     background-color: #fcf5f3;
-    height: 100%;
 
     @include md {
       background-color: transparent;

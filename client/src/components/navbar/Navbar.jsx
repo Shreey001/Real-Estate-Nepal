@@ -12,8 +12,7 @@ function Navbar() {
     <nav>
       <div className="left">
         <a href="/" className="logo">
-          <img src="/logo.png" alt="" />
-          <span>LamaEstate</span>
+          <img src="/logo1.png" alt="" />
         </a>
         <a href="/">Home</a>
         <a href="/">About</a>
@@ -32,8 +31,10 @@ function Navbar() {
           </div>
         ) : (
           <>
-            <Link to="/login">Sign in</Link>
-            <Link to="/register" className="register">
+            <Link className="login" to="/login">
+              Sign in
+            </Link>
+            <Link className="register" to="/register">
               Sign up
             </Link>
           </>
