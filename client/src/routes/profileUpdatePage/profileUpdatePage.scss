@@ -2,8 +2,23 @@
   height: 100%;
   display: flex;
 
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    font-size: 18px;
+  }
+
+  .error {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+
   .formContainer {
-    flex:3;
+    flex: 3;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -11,6 +26,8 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
+      width: 100%;
+      max-width: 400px;
 
       .item {
         display: flex;
@@ -18,22 +35,40 @@
         gap: 5px;
 
         label {
+          font-weight: 500;
         }
 
         input {
-          padding: 20px;
+          padding: 15px;
           border-radius: 5px;
-          border: 1px solid gray;
+          border: 1px solid #ddd;
+          font-size: 16px;
+
+          &:focus {
+            outline: none;
+            border-color: #fece51;
+          }
         }
       }
+
       button {
-        padding: 20px;
+        padding: 15px;
         border-radius: 5px;
         border: none;
-        background-color: teal;
-        color: white;
+        background-color: #fece51;
+        color: #333;
         font-weight: bold;
         cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: darken(#fece51, 10%);
+        }
+
+        &:disabled {
+          background-color: #ccc;
+          cursor: not-allowed;
+        }
       }
     }
   }
@@ -46,10 +81,15 @@
     gap: 20px;
     align-items: center;
     justify-content: center;
+    padding: 20px;
 
-    .avatar{
-      width: 50%;
+    .avatar {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
       object-fit: cover;
+      border: 3px solid white;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     }
   }
 }
