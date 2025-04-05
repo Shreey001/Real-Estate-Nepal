@@ -22,7 +22,7 @@ function Navbar() {
       <div className="right">
         {currentUser ? (
           <div className="user">
-            <img src={currentUser.profilePicture || "/noavatar.jpg"} alt="" />
+            <img src={currentUser.profilePicture || "/noavatar.png"} alt="" />
             <span>{currentUser.username}</span>
             <Link to="/profile" className="profile">
               <div className="notification">3</div>
@@ -52,9 +52,7 @@ function Navbar() {
           <a href="/">Contact</a>
           <a href="/">Agents</a>
           <Link to="/login">Sign in</Link>
-          <Link to="/register" className="register">
-            Sign up
-          </Link>
+          <Link to="/register">Sign up</Link>
         </div>
       </div>
     </nav>

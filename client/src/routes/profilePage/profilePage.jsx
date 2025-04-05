@@ -1,7 +1,7 @@
 import Chat from "../../components/chat/Chat";
 import List from "../../components/list/List";
 import "./profilePage.scss";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import apiRequest from "../../lib/apiRequest";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext } from "react";
@@ -26,12 +26,14 @@ function ProfilePage() {
         <div className="wrapper">
           <div className="title">
             <h1>User Information</h1>
-            <button>Update Profile</button>
+            <Link to="/profileUpdate">
+              <button>Update Profile</button>
+            </Link>
           </div>
           <div className="info">
             <span>
               Avatar:
-              <img src={currentUser.avatar || "/noavatar.jpg"} alt="" />
+              <img src={currentUser.avatar || "/noavatar.png"} alt="" />
             </span>
             <span>
               Username: <b>{currentUser.username}</b>
