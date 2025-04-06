@@ -5,7 +5,7 @@ import { AdvancedImage, responsive, placeholder } from "@cloudinary/react";
 import CloudinaryUploadWidget from "./components/CloudinaryUploadWidget";
 import "./uploadwidgets.scss";
 
-const UploadWidgets = ({ setAvatar, uwConfig }) => {
+const UploadWidgets = ({ uwConfig, setState }) => {
   // Configuration
   const cloudName = uwConfig?.cloudName || "dqiqotjg4";
   const uploadPreset = uwConfig?.uploadPreset || "estatw";
@@ -26,7 +26,7 @@ const UploadWidgets = ({ setAvatar, uwConfig }) => {
     cloudName,
     uploadPreset,
     multiple: false,
-    folder: "avatars",
+    folder: "posts",
   };
 
   // Use provided config or default
@@ -36,8 +36,8 @@ const UploadWidgets = ({ setAvatar, uwConfig }) => {
   const handleUploadSuccess = (publicId, url) => {
     setPublicId(publicId);
     setImageUrl(url);
-    if (setAvatar && url) {
-      setAvatar(url);
+    if (setState && url) {
+      setState((prev) => [...prev, url]);
     }
   };
 

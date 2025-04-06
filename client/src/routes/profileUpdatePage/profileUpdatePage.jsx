@@ -8,7 +8,7 @@ import UploadWidgets from "../../components/uploadWidgets/UploadWidgets";
 function ProfileUpdatePage() {
   const { currentUser, updateUser } = useContext(AuthContext);
   const [error, setError] = useState(null);
-  const [avatar, setAvatar] = useState("");
+  const [avatar, setAvatar] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -31,6 +31,8 @@ function ProfileUpdatePage() {
       const updateData = {
         username,
         email,
+        password,
+        avatar: avatar[0],
       };
 
       // Only include password if it's not empty
@@ -104,7 +106,7 @@ function ProfileUpdatePage() {
       </div>
       <div className="sideContainer">
         <img
-          src={avatar || "/noavatar.png"}
+          src={avatar[0] || currentUser.avatar || "/noavatar.png"}
           alt="Profile avatar"
           className="avatar"
         />
@@ -116,7 +118,7 @@ function ProfileUpdatePage() {
             maxImageFileSize: 2000000,
             folder: "avatars",
           }}
-          setAvatar={setAvatar}
+          setState={setAvatar}
         />
       </div>
     </div>
