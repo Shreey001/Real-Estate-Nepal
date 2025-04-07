@@ -54,7 +54,8 @@ const UploadWidgets = ({ uwConfig, setState }) => {
         onUploadSuccess={handleUploadSuccess}
       />
 
-      {imageUrl && (
+      {/* Only show preview for single image uploads */}
+      {imageUrl && !widgetConfig.multiple && (
         <div className="image-preview">
           <img
             src={imageUrl}
