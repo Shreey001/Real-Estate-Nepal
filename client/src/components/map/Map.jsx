@@ -14,7 +14,7 @@ function Map({ items = [] }) {
           ? [validItems[0].latitude, validItems[0].longitude]
           : defaultCenter
       }
-      zoom={validItems.length === 1 ? 12 : 3}
+      zoom={validItems.length === 1 ? 13 : 2}
       scrollWheelZoom={true}
       className="map"
     >
