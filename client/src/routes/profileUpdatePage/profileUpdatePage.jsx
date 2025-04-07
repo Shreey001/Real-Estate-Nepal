@@ -8,7 +8,7 @@ import UploadWidgets from "../../components/uploadWidgets/UploadWidgets";
 function ProfileUpdatePage() {
   const { currentUser, updateUser } = useContext(AuthContext);
   const [error, setError] = useState(null);
-  const [avatar, setAvatar] = useState([]);
+  const [avatar, setAvatar] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -24,33 +24,43 @@ function ProfileUpdatePage() {
     setIsLoading(true);
     setError(null);
 
+    if (!currentUser || !currentUser.id) {
+      setError("User session expired. Please login again.");
+      setIsLoading(false);
+      return;
+    }
+
     const formData = new FormData(e.target);
     const { username, email, password } = Object.fromEntries(formData);
 
     try {
+      // Create update data object with required fields
       const updateData = {
-        username,
-        email,
-        password,
-        avatar: avatar[0],
+        username: username.trim(),
+        email: email.trim(),
       };
 
       // Only include password if it's not empty
-      if (password) {
+      if (password && password.trim() !== "") {
         updateData.password = password;
       }
 
-      // Include avatar if it has changed
+      // Include avatar if it has changed and is valid
       if (avatar && avatar !== currentUser.avatar) {
         updateData.avatar = avatar;
       }
 
-      console.log("Updating user with data:", updateData);
       const res = await apiRequest.put(`/users/${currentUser.id}`, updateData);
-      updateUser(res.data);
+
+      // Update the local user data with the response
+      const updatedUser = {
+        ...currentUser,
+        ...res.data,
+      };
+      updateUser(updatedUser);
+
       navigate("/profile");
     } catch (error) {
-      console.error("Update error:", error);
       setError(
         error.response?.data?.message || "An error occurred during update"
       );
@@ -98,7 +108,7 @@ function ProfileUpdatePage() {
               placeholder="Leave empty to keep current password"
             />
           </div>
-          <button disabled={isLoading}>
+          <button type="submit" disabled={isLoading}>
             {isLoading ? "Updating..." : "Update"}
           </button>
           {error && <p className="error">{error}</p>}
@@ -106,7 +116,7 @@ function ProfileUpdatePage() {
       </div>
       <div className="sideContainer">
         <img
-          src={avatar[0] || currentUser.avatar || "/noavatar.png"}
+          src={avatar || currentUser.avatar || "/noavatar.png"}
           alt="Profile avatar"
           className="avatar"
         />

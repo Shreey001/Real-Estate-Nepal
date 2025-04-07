@@ -4,10 +4,11 @@ import "./profilePage.scss";
 import { useNavigate, Link } from "react-router-dom";
 import apiRequest from "../../lib/apiRequest";
 import { AuthContext } from "../../context/AuthContext";
-import { useContext } from "react";
-import { useLoaderData, Await, Suspense } from "react-router-dom";
+import { useContext, Suspense } from "react";
+import { useLoaderData, Await } from "react-router-dom";
+
 function ProfilePage() {
-  const { data } = useLoaderData();
+  const { postResponse } = useLoaderData();
   const { currentUser, updateUser } = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -21,6 +22,23 @@ function ProfilePage() {
       console.log(error);
     }
   };
+
+  const renderList = (resolvedData, type) => {
+    if (!resolvedData || !resolvedData.data) {
+      return <div>No data available</div>;
+    }
+
+    const posts =
+      type === "user"
+        ? resolvedData.data.userPosts
+        : resolvedData.data.savedPosts;
+    if (!posts || !Array.isArray(posts)) {
+      return <div>No posts available</div>;
+    }
+
+    return <List posts={posts} />;
+  };
+
   return (
     <div className="profilePage">
       <div className="details">
@@ -34,13 +52,13 @@ function ProfilePage() {
           <div className="info">
             <span>
               Avatar:
-              <img src={currentUser.avatar || "/noavatar.jpg"} alt="" />
+              <img src={currentUser?.avatar || "/noavatar.jpg"} alt="" />
             </span>
             <span>
-              Username: <b>{currentUser.username}</b>
+              Username: <b>{currentUser?.username}</b>
             </span>
             <span>
-              E-mail: <b>{currentUser.email}</b>
+              E-mail: <b>{currentUser?.email}</b>
             </span>
             <button onClick={handleLogout}>Logout</button>
           </div>
@@ -52,11 +70,10 @@ function ProfilePage() {
           </div>
           <Suspense fallback={<div>Loading...</div>}>
             <Await
-              resolve={data.postResponse}
+              resolve={postResponse}
               errorElement={<div>Error Loading Data</div>}
-              errorComponent={<div>Error Loading Data</div>}
             >
-              {(postResponse) => <List posts={postResponse.data.userPosts} />}
+              {(resolvedData) => renderList(resolvedData, "user")}
             </Await>
           </Suspense>
           <div className="title">
@@ -64,11 +81,10 @@ function ProfilePage() {
           </div>
           <Suspense fallback={<div>Loading...</div>}>
             <Await
-              resolve={data.postResponse}
+              resolve={postResponse}
               errorElement={<div>Error Loading Data</div>}
-              errorComponent={<div>Error Loading Data</div>}
             >
-              {(postResponse) => <List posts={postResponse.data.savedPosts} />}
+              {(resolvedData) => renderList(resolvedData, "saved")}
             </Await>
           </Suspense>
         </div>

@@ -4,6 +4,7 @@ import Card from "../../components/card/Card";
 import Map from "../../components/map/Map";
 import { useLoaderData, Await } from "react-router-dom";
 import { Suspense } from "react";
+
 function ListPage() {
   const data = useLoaderData();
 
@@ -16,7 +17,6 @@ function ListPage() {
             <Await
               resolve={data.postResponse}
               errorElement={<div>Error Loading Data</div>}
-              errorComponent={<div>Error Loading Data</div>}
             >
               {(postResponse) =>
                 postResponse.map((post) => <Card key={post.id} item={post} />)
@@ -30,9 +30,8 @@ function ListPage() {
           <Await
             resolve={data.postResponse}
             errorElement={<div>Error Loading Data</div>}
-            errorComponent={<div>Error Loading Data</div>}
           >
-            {(postResponse) => <Map items={postResponse.data} />}
+            {(postResponse) => <Map items={postResponse} />}
           </Await>
         </Suspense>
       </div>

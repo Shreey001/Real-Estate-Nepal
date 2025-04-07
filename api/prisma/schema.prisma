@@ -27,10 +27,11 @@ model User {
 model Post {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   title     String
-  price     Int
+  price     Float // Changed to Float to handle decimal prices
   images    String[]
   address   String
   city      String
+  location  String? // Added location field (neighborhood, district, etc.)
   bedroom   Int
   bathroom  Int
   latitude  Float
@@ -58,25 +59,25 @@ enum Property {
 }
 
 model PostDetail {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
   desc       String
-  utilities  String?
-  pet        String?
-  income     Int?
-  size       Int?
-  school     Int?
-  bus        Int?
-  restaurant Int?
-  post       Post    @relation(fields: [postId], references: [id])
-  postId     String  @unique @db.ObjectId
+  utilities  String
+  pet        String
+  income     Float // Changed to Float to handle larger income values
+  size       Float // Changed to Float to handle decimal square footage
+  school     Float // Changed to Float for more precise distances
+  bus        Float // Changed to Float for more precise distances
+  restaurant Float // Changed to Float for more precise distances
+  post       Post   @relation(fields: [postId], references: [id])
+  postId     String @unique @db.ObjectId
 }
 
 model savedPost {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   user      User     @relation(fields: [userId], references: [id])
   post      Post     @relation(fields: [postId], references: [id])
-  userId    String   @unique @db.ObjectId
-  postId    String   @unique @db.ObjectId
+  userId    String   @db.ObjectId
+  postId    String   @db.ObjectId
   createdAt DateTime @default(now())
 
   @@unique([userId, postId])

@@ -26,16 +26,12 @@ function App() {
         {
           path: "/list",
           element: <ListPage />,
+          loader: listPageLoader,
         },
         {
           path: "/:id",
           element: <SinglePage />,
           loader: singlePageLoader,
-        },
-        {
-          path: "/list",
-          element: <ListPage />,
-          loader: listPageLoader,
         },
         {
           path: "/login",

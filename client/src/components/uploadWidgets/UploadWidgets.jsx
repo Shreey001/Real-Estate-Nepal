@@ -37,7 +37,13 @@ const UploadWidgets = ({ uwConfig, setState }) => {
     setPublicId(publicId);
     setImageUrl(url);
     if (setState && url) {
-      setState((prev) => [...prev, url]);
+      // If multiple is false, just set the URL directly
+      if (!widgetConfig.multiple) {
+        setState(url);
+      } else {
+        // If multiple is true, append to array
+        setState((prev) => [...prev, url]);
+      }
     }
   };
 
