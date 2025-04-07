@@ -1,100 +1,179 @@
 @import "../../responsive.scss";
 
 .card {
+  width: 100%;
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
 
   .imageContainer {
-    flex: 2;
-    height: 200px;
+    width: 100%;
+    height: 220px;
+    position: relative;
+    overflow: hidden;
 
-    @include md {
-      display: none;
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 70%,
+        rgba(0, 0, 0, 0.3) 100%
+      );
+      pointer-events: none;
     }
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 10px;
+      transition: transform 0.4s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.05);
+    }
+
+    .propertyType {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      z-index: 2;
+    }
+
+    .propertyStatus {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background-color: #4a80f0;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      z-index: 2;
     }
   }
+
   .textContainer {
-    flex: 3;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 10px;
-
-    img {
-      width: 16px;
-      height: 16px;
-    }
+    gap: 8px;
 
     .title {
-      font-size: 20px;
+      font-size: 1.1rem;
       font-weight: 600;
-      color: #444;
-      transition: all 0.4s ease;
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
-      &:hover {
-        color: #000;
-        scale: 1.01;
+      a {
+        color: #333;
+        text-decoration: none;
+
+        &:hover {
+          color: #4a80f0;
+        }
       }
     }
 
     .address {
-      font-size: 14px;
       display: flex;
       align-items: center;
+      font-size: 0.9rem;
+      color: #666;
+      margin: 0;
       gap: 5px;
-      color: #888;
+
+      img {
+        width: 16px;
+        height: 16px;
+        object-fit: contain;
+      }
+
+      span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
 
     .price {
-      font-size: 20px;
-      font-weight: 300;
-      padding: 5px;
-      border-radius: 5px;
-      background-color: rgba(254, 205, 81, 0.438);
-      width: max-content;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #4a80f0;
+      margin: 8px 0;
     }
 
     .bottom {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
+      align-items: center;
+      margin-top: 8px;
 
       .features {
         display: flex;
-        gap: 20px;
-        font-size: 14px;
+        gap: 12px;
 
         .feature {
           display: flex;
           align-items: center;
           gap: 5px;
-          background-color: whitesmoke;
-          padding: 5px;
-          border-radius: 5px;
+          font-size: 0.85rem;
+          color: #555;
+
+          img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+          }
         }
       }
 
       .icons {
         display: flex;
-        gap: 20px;
+        gap: 12px;
 
         .icon {
-          border: 1px solid #999;
-          padding: 2px 5px;
-          border-radius: 5px;
-          cursor: pointer;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background-color: #f5f5f5;
           display: flex;
           align-items: center;
           justify-content: center;
+          cursor: pointer;
+          transition: background-color 0.2s ease;
 
           &:hover {
-            background-color: lightgray;
+            background-color: #e0e0e0;
+          }
+
+          img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
           }
         }
       }

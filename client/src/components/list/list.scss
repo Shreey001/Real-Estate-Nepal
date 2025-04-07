@@ -1,5 +1,106 @@
 .list {
-  display: flex;
-  flex-direction: column;
-  gap: 50px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+
+  &:empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    grid-template-columns: 1fr;
+
+    &::after {
+      content: "No properties found";
+      color: #999;
+      font-size: 1.1rem;
+    }
+  }
+
+  .card-placeholder {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+
+    .image-placeholder {
+      height: 200px;
+      background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    .content-placeholder {
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .title-placeholder {
+        height: 24px;
+        width: 80%;
+        background: linear-gradient(
+          90deg,
+          #f0f0f0 25%,
+          #f8f8f8 50%,
+          #f0f0f0 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 4px;
+      }
+
+      .details-placeholder {
+        height: 16px;
+        width: 60%;
+        background: linear-gradient(
+          90deg,
+          #f0f0f0 25%,
+          #f8f8f8 50%,
+          #f0f0f0 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 4px;
+      }
+
+      .price-placeholder {
+        height: 20px;
+        width: 40%;
+        background: linear-gradient(
+          90deg,
+          #f0f0f0 25%,
+          #f8f8f8 50%,
+          #f0f0f0 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 4px;
+        margin-top: auto;
+      }
+    }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

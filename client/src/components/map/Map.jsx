@@ -14,8 +14,8 @@ function Map({ items = [] }) {
           ? [validItems[0].latitude, validItems[0].longitude]
           : defaultCenter
       }
-      zoom={validItems.length === 1 ? 13 : 7}
-      scrollWheelZoom={false}
+      zoom={validItems.length === 1 ? 12 : 3}
+      scrollWheelZoom={true}
       className="map"
     >
       <TileLayer

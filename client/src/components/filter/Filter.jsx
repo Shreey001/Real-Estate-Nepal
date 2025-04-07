@@ -1,122 +1,169 @@
 import "./filter.scss";
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function Filter() {
+const Filter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [query, setQuery] = useState({
-    searchTerm: searchParams.get("searchTerm") || "",
-    type: searchParams.get("type") || "",
-    property: searchParams.get("property") || "",
-    minPrice: searchParams.get("minPrice") || "",
-    maxPrice: searchParams.get("maxPrice") || "",
-    bedroom: searchParams.get("bedroom") || "",
-  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setQuery((prev) => ({ ...prev, [name]: value }));
+  const [searchTerm, setSearchTerm] = useState(
+    searchParams.get("searchTerm") || ""
+  );
+  const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
+  const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
+  const [type, setType] = useState(searchParams.get("type") || "");
+  const [mode, setMode] = useState(searchParams.get("mode") || "");
+  const [bedroom, setBedroom] = useState(searchParams.get("bedroom") || "");
+  const [bathroom, setBathroom] = useState(searchParams.get("bathroom") || "");
+
+  // Keep search parameters in sync with URL
+  useEffect(() => {
+    setSearchTerm(searchParams.get("searchTerm") || "");
+    setMinPrice(searchParams.get("minPrice") || "");
+    setMaxPrice(searchParams.get("maxPrice") || "");
+    setType(searchParams.get("type") || "");
+    setMode(searchParams.get("mode") || "");
+    setBedroom(searchParams.get("bedroom") || "");
+    setBathroom(searchParams.get("bathroom") || "");
+  }, [searchParams]);
+
+  const handleChange = (setter) => (e) => {
+    setter(e.target.value);
   };
 
-  const handleFilter = () => {
-    const params = new URLSearchParams();
-    Object.entries(query).forEach(([key, value]) => {
-      if (value) {
-        params.append(key, value);
-      }
-    });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const params = new URLSearchParams(searchParams);
+
+    // Only add parameters that have values
+    if (searchTerm) params.set("searchTerm", searchTerm);
+    else params.delete("searchTerm");
+
+    if (minPrice) params.set("minPrice", minPrice);
+    else params.delete("minPrice");
+
+    if (maxPrice) params.set("maxPrice", maxPrice);
+    else params.delete("maxPrice");
+
+    if (type) params.set("type", type);
+    else params.delete("type");
+
+    if (mode) params.set("mode", mode);
+    else params.delete("mode");
+
+    if (bedroom) params.set("bedroom", bedroom);
+    else params.delete("bedroom");
+
+    if (bathroom) params.set("bathroom", bathroom);
+    else params.delete("bathroom");
+
     setSearchParams(params);
   };
 
+  const handleReset = () => {
+    setSearchTerm("");
+    setMinPrice("");
+    setMaxPrice("");
+    setType("");
+    setMode("");
+    setBedroom("");
+    setBathroom("");
+    setSearchParams({});
+  };
+
+  const hasFilters =
+    searchTerm || minPrice || maxPrice || type || mode || bedroom || bathroom;
+
   return (
-    <div className="filter">
+    <form className="filter" onSubmit={handleSubmit}>
       <h1>
-        Search results for <b>{query.searchTerm || "All locations"}</b>
+        Search properties <b>for you</b>
       </h1>
       <div className="top">
         <div className="item">
-          <label htmlFor="searchTerm">Location</label>
+          <label>Search term</label>
           <input
             type="text"
-            id="searchTerm"
-            name="searchTerm"
-            placeholder="Enter city or location (e.g. New York, Manhattan)"
-            onChange={handleChange}
-            value={query.searchTerm}
+            placeholder="Address, City, or Neighborhood"
+            value={searchTerm}
+            onChange={handleChange(setSearchTerm)}
           />
         </div>
       </div>
       <div className="bottom">
         <div className="item">
-          <label htmlFor="type">Type</label>
-          <select
-            name="type"
-            id="type"
-            onChange={handleChange}
-            value={query.type}
-          >
-            <option value="">any</option>
-            <option value="buy">Buy</option>
-            <option value="rent">Rent</option>
-          </select>
-        </div>
-        <div className="item">
-          <label htmlFor="property">Property</label>
-          <select
-            name="property"
-            id="property"
-            onChange={handleChange}
-            value={query.property}
-          >
-            <option value="">any</option>
-            <option value="apartment">Apartment</option>
+          <label>Type</label>
+          <select value={type} onChange={handleChange(setType)}>
+            <option value="">Any</option>
             <option value="house">House</option>
+            <option value="apartment">Apartment</option>
             <option value="condo">Condo</option>
             <option value="land">Land</option>
           </select>
         </div>
         <div className="item">
-          <label htmlFor="minPrice">Min Price</label>
+          <label>For</label>
+          <select value={mode} onChange={handleChange(setMode)}>
+            <option value="">All</option>
+            <option value="rent">Rent</option>
+            <option value="sale">Sale</option>
+          </select>
+        </div>
+        <div className="item">
+          <label>Min Price</label>
           <input
             type="number"
-            id="minPrice"
-            name="minPrice"
-            min={0}
-            placeholder="any"
-            onChange={handleChange}
-            value={query.minPrice}
+            placeholder="Min"
+            value={minPrice}
+            onChange={handleChange(setMinPrice)}
           />
         </div>
         <div className="item">
-          <label htmlFor="maxPrice">Max Price</label>
+          <label>Max Price</label>
           <input
             type="number"
-            id="maxPrice"
-            name="maxPrice"
-            min={0}
-            placeholder="any"
-            onChange={handleChange}
-            value={query.maxPrice}
+            placeholder="Max"
+            value={maxPrice}
+            onChange={handleChange(setMaxPrice)}
           />
         </div>
         <div className="item">
-          <label htmlFor="bedroom">Bedroom</label>
-          <input
-            type="number"
-            id="bedroom"
-            name="bedroom"
-            min={1}
-            placeholder="any"
-            onChange={handleChange}
-            value={query.bedroom}
-          />
+          <label>Bedrooms</label>
+          <select value={bedroom} onChange={handleChange(setBedroom)}>
+            <option value="">Any</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+            <option value="4">4+</option>
+            <option value="5">5+</option>
+          </select>
         </div>
-        <button onClick={handleFilter}>
-          <img src="/search.png" alt="Apply filters" />
+        <div className="item">
+          <label>Bathrooms</label>
+          <select value={bathroom} onChange={handleChange(setBathroom)}>
+            <option value="">Any</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+            <option value="4">4+</option>
+          </select>
+        </div>
+        <button type="submit" aria-label="Search properties">
+          <img src="/search.png" alt="Search" />
         </button>
       </div>
-    </div>
+      {hasFilters && (
+        <div className="filterActions">
+          <button type="button" className="resetButton" onClick={handleReset}>
+            Reset Filters
+          </button>
+          <button type="submit" className="applyButton">
+            Apply Filters
+          </button>
+        </div>
+      )}
+    </form>
   );
-}
+};
 
 export default Filter;
