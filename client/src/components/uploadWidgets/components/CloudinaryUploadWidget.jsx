@@ -19,7 +19,7 @@ const CloudinaryUploadWidget = ({ uwConfig, onUploadSuccess }) => {
           // Optional parameters
           folder: uwConfig.folder || "avatars",
           multiple: uwConfig.multiple || false,
-          maxImageFileSize: uwConfig.maxImageFileSize || 2000000,
+          maxImageFileSize: uwConfig.maxImageFileSize || 3000000,
           cropping: uwConfig.cropping,
           showAdvancedOptions: uwConfig.showAdvancedOptions || false,
           sources: uwConfig.sources || ["local", "url", "camera"],
