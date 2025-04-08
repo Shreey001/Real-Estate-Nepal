@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 
 export const getPosts = async (req, res) => {
   const query = req.query;
+  const userId = req.userId; // From verifyToken middleware
+
   try {
     // Build search conditions
     let searchConditions = {
@@ -29,6 +31,7 @@ export const getPosts = async (req, res) => {
       };
     }
 
+    // Get all posts
     const posts = await prisma.post.findMany({
       where: searchConditions,
       orderBy: {
@@ -36,8 +39,28 @@ export const getPosts = async (req, res) => {
       },
     });
 
+    // If user is authenticated, get their saved posts
+    let savedPostIds = new Set();
+    if (userId) {
+      const savedPosts = await prisma.savedPost.findMany({
+        where: {
+          userId: userId,
+        },
+        select: {
+          postId: true,
+        },
+      });
+      savedPostIds = new Set(savedPosts.map((sp) => sp.postId));
+    }
+
+    // Add isSaved field to each post
+    const postsWithSavedStatus = posts.map((post) => ({
+      ...post,
+      isSaved: savedPostIds.has(post.id),
+    }));
+
     setTimeout(() => {
-      res.status(200).json(posts);
+      res.status(200).json(postsWithSavedStatus);
     }, 10);
   } catch (error) {
     console.error("Search error:", error);
@@ -67,18 +90,8 @@ export const getPost = async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    let userId = null;
-    const token = req.cookies.token;
-
-    if (token) {
-      try {
-        const payload = jwt.verify(token, process.env.JWT_SECRET);
-        userId = payload.id;
-      } catch (err) {
-        console.error("JWT verification error:", err);
-        // Keep userId as null if token verification fails
-      }
-    }
+    // Get user ID from verified token (set by verifyToken middleware)
+    const userId = req.userId;
 
     let isSaved = false;
     if (userId) {

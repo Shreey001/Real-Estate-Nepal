@@ -122,7 +122,7 @@
     .price {
       font-size: 1.4rem;
       font-weight: 700;
-      color: #4a80f0;
+      color: #16a34a;
       margin: 8px 0;
     }
 
@@ -156,27 +156,94 @@
         gap: 12px;
 
         .icon {
-          width: 32px;
-          height: 32px;
+          width: 36px;
+          height: 36px;
           border-radius: 50%;
-          background-color: #f5f5f5;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: background-color 0.2s ease;
+          transition: all 0.2s ease-in-out;
+          border: none;
+          padding: 0;
 
-          &:hover {
-            background-color: #e0e0e0;
+          svg {
+            width: 18px;
+            height: 18px;
+            transition: all 0.2s ease-in-out;
           }
 
-          img {
-            width: 16px;
-            height: 16px;
-            object-fit: contain;
+          &.save-button {
+            background-color: #fefce8;
+            color: #854d0e;
+            border: 2px solid #fef08a;
+
+            &:hover:not(:disabled) {
+              background-color: #fef9c3;
+              border-color: #facc15;
+              transform: translateY(-1px);
+              box-shadow: 0 4px 12px rgba(234, 179, 8, 0.1);
+            }
+
+            &:active:not(:disabled) {
+              transform: translateY(0);
+            }
+
+            &.saved {
+              background-color: #fef9c3;
+              color: #854d0e;
+              border-color: #facc15;
+
+              &:hover:not(:disabled) {
+                background-color: #fef08a;
+                box-shadow: 0 4px 12px rgba(234, 179, 8, 0.15);
+              }
+            }
+
+            &.loading {
+              opacity: 0.7;
+              cursor: not-allowed;
+
+              svg {
+                animation: pulse 1.5s ease-in-out infinite;
+              }
+            }
+
+            &:disabled {
+              cursor: not-allowed;
+            }
+          }
+
+          &.contact-button {
+            background-color: #eab308;
+            color: #422006;
+            border: none;
+
+            &:hover {
+              background-color: #ca8a04;
+              color: white;
+              transform: translateY(-1px);
+              box-shadow: 0 4px 12px rgba(234, 179, 8, 0.2);
+            }
+
+            &:active {
+              transform: translateY(0);
+            }
           }
         }
       }
     }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
   }
 }

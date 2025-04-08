@@ -1,7 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./card.scss";
+import { useContext, useState, useEffect, useCallback } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
+import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
+import apiRequest from "../../lib/apiRequest";
 
-function Card({ item }) {
+function Card({ item, onSaveChange }) {
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [saved, setSaved] = useState(item.isSaved);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Update saved state when item.isSaved changes
+  useEffect(() => {
+    setSaved(item.isSaved);
+  }, [item.isSaved]);
+
   // Determine property status based on type (rent/buy)
   const propertyStatus = item.type === "rent" ? "For Rent" : "For Sale";
 
@@ -9,6 +24,57 @@ function Card({ item }) {
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
+
+  const handleSave = useCallback(
+    async (e) => {
+      e.preventDefault(); // Prevent navigation when clicking save
+      e.stopPropagation(); // Prevent event bubbling
+
+      if (!currentUser) {
+        navigate("/login");
+        return;
+      }
+
+      if (isLoading) return; // Prevent multiple clicks while loading
+
+      try {
+        setIsLoading(true);
+        await apiRequest.post("/users/save", {
+          postId: item.id,
+        });
+
+        // Update local state
+        const newSavedState = !saved;
+        setSaved(newSavedState);
+
+        // Notify parent component about the change
+        if (onSaveChange) {
+          onSaveChange(item.id, newSavedState);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [currentUser, item.id, navigate, saved, isLoading, onSaveChange]
+  );
+
+  const handleContact = useCallback(
+    (e) => {
+      e.preventDefault(); // Prevent navigation
+      e.stopPropagation(); // Prevent event bubbling
+
+      if (!currentUser) {
+        navigate("/login");
+        return;
+      }
+
+      // Navigate to the property page for contact
+      navigate(`/${item.id}`);
+    },
+    [currentUser, item.id, navigate]
+  );
 
   return (
     <div className="card">
@@ -44,12 +110,23 @@ function Card({ item }) {
             </div>
           </div>
           <div className="icons">
-            <div className="icon" title="Save">
-              <img src="/save.png" alt="save" />
-            </div>
-            <div className="icon" title="Contact">
-              <img src="/chat.png" alt="contact" />
-            </div>
+            <button
+              onClick={handleSave}
+              className={`icon save-button ${saved ? "saved" : ""} ${
+                isLoading ? "loading" : ""
+              }`}
+              title={saved ? "Remove from saved" : "Save property"}
+              disabled={isLoading}
+            >
+              {saved ? <BsBookmarkFill /> : <BsBookmark />}
+            </button>
+            <button
+              onClick={handleContact}
+              className="icon contact-button"
+              title="Contact owner"
+            >
+              <IoChatbubbleEllipsesOutline />
+            </button>
           </div>
         </div>
       </div>

@@ -2,8 +2,16 @@ import apiRequest from "./apiRequest";
 import { defer } from "react-router-dom";
 
 export const singlePageLoader = async ({ request, params }) => {
-  const res = await apiRequest("/posts/" + params.id);
-  return res.data;
+  const postPromise = apiRequest("/posts/" + params.id)
+    .then((res) => res.data)
+    .catch((error) => {
+      console.error("Error loading post:", error);
+      throw error;
+    });
+
+  return defer({
+    post: postPromise,
+  });
 };
 
 export const listPageLoader = async ({ request }) => {

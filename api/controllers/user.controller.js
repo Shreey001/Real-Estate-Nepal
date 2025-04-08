@@ -139,19 +139,40 @@ export const savePost = async (req, res) => {
 };
 
 export const profilePosts = async (req, res) => {
-  const tokenUserId = req.params.id;
+  const tokenUserId = req.userId;
   try {
+    // Get user's own posts
     const userPosts = await prisma.post.findMany({
       where: { userId: tokenUserId },
     });
+
+    // Get saved posts with their full details
     const saved = await prisma.savedPost.findMany({
       where: { userId: tokenUserId },
       include: {
         post: true,
       },
     });
-    const savedPostsData = saved.map((post) => post.post);
-    res.status(200).json({ userPosts, savedPosts: savedPostsData });
+
+    // Add isSaved=true to saved posts
+    const savedPostsData = saved.map((savedPost) => ({
+      ...savedPost.post,
+      isSaved: true, // Explicitly set isSaved to true for saved posts
+    }));
+
+    // Add isSaved=false to user's own posts (unless they're also saved)
+    const savedPostIds = new Set(saved.map((sp) => sp.postId));
+    const userPostsWithSavedStatus = userPosts.map((post) => ({
+      ...post,
+      isSaved: savedPostIds.has(post.id),
+    }));
+
+    res
+      .status(200)
+      .json({
+        userPosts: userPostsWithSavedStatus,
+        savedPosts: savedPostsData,
+      });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Failed to get profile posts" });

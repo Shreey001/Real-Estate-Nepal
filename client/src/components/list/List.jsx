@@ -1,7 +1,17 @@
 import "./list.scss";
 import Card from "../card/Card";
+import { useState, useCallback } from "react";
 
 function List({ posts, loading = false }) {
+  const [savedStates, setSavedStates] = useState({});
+
+  const handleSaveChange = useCallback((postId, isSaved) => {
+    setSavedStates((prev) => ({
+      ...prev,
+      [postId]: isSaved,
+    }));
+  }, []);
+
   if (loading) {
     return (
       <div className="list list-loading">
@@ -26,7 +36,17 @@ function List({ posts, loading = false }) {
   return (
     <div className="list">
       {posts.map((item) => (
-        <Card key={item.id} item={item} />
+        <Card
+          key={item.id}
+          item={{
+            ...item,
+            isSaved:
+              savedStates[item.id] !== undefined
+                ? savedStates[item.id]
+                : item.isSaved,
+          }}
+          onSaveChange={handleSaveChange}
+        />
       ))}
     </div>
   );
