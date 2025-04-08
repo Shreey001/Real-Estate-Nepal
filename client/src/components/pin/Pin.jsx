@@ -16,11 +16,11 @@ function Pin({ item }) {
       : item.img || "/house-placeholder.jpg";
 
   // Custom marker icon
-  const customIcon = L.divIcon({
-    className: "custom-pin",
-    html: `<div class="pin-marker">$${formatPrice(item.price)}</div>`,
-    iconSize: [80, 30],
-    iconAnchor: [40, 15],
+  const customIcon = L.icon({
+    iconUrl: "/blue-pin.svg",
+    iconSize: [24, 36],
+    iconAnchor: [12, 36],
+    popupAnchor: [0, -36]
   });
 
   return (

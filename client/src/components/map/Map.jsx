@@ -5,7 +5,7 @@ import Pin from "../pin/Pin";
 
 function Map({ items = [] }) {
   const validItems = Array.isArray(items) ? items : [];
-  const defaultCenter = [52.4797, -1.90269]; // Default to UK center
+  const defaultCenter = [27.7172, 85.3240]; // Default to Kathmandu center
 
   return (
     <MapContainer
@@ -14,7 +14,7 @@ function Map({ items = [] }) {
           ? [validItems[0].latitude, validItems[0].longitude]
           : defaultCenter
       }
-      zoom={validItems.length === 1 ? 13 : 2}
+      zoom={validItems.length === 1 ? 13 : 11} // Zoom level 11 for city-wide view of Kathmandu
       scrollWheelZoom={true}
       className="map"
     >
