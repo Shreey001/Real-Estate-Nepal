@@ -78,14 +78,6 @@ export const deleteUser = async (req, res) => {
   const id = req.params.id;
   const tokenUserId = req.userId;
 
-  console.log("Delete - Request ID:", id, "Type:", typeof id);
-  console.log(
-    "Delete - Token User ID:",
-    tokenUserId,
-    "Type:",
-    typeof tokenUserId
-  );
-
   if (String(id) !== String(tokenUserId)) {
     return res.status(403).json({ message: "Unauthorized" });
   }

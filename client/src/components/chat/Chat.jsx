@@ -206,7 +206,6 @@ function Chat({ chats }) {
   return (
     <div className="chat">
       <div className="messages">
-        <h1>Messages</h1>
         {processedChatList.length === 0 ? (
           <div className="emptyMessageContainer">
             <div className="noMessages">No messages yet</div>
@@ -295,7 +294,7 @@ function Chat({ chats }) {
           </div>
           <form onSubmit={handleSubmit} className="bottom">
             <textarea name="text" placeholder="Type your message..."></textarea>
-            <button type="submit">Send</button>
+            <button type="submit"></button>
           </form>
         </div>
       )}

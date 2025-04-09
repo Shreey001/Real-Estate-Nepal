@@ -270,9 +270,8 @@ function ChatModal({ receiverId, receiverUsername, receiverAvatar, onClose }) {
                 <textarea
                   ref={textareaRef}
                   placeholder="Type your message here..."
-                  rows="3"
                 ></textarea>
-                <button type="submit">Send</button>
+                <button type="submit"></button>
               </form>
             </>
           )}

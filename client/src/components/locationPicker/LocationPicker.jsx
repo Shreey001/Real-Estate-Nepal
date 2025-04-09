@@ -166,7 +166,6 @@ function LocationPicker({ onSelectLocation, initialLat, initialLng }) {
       }
 
       const data = await response.json();
-      console.log("Reverse geocoding result:", data);
 
       if (data && data.display_name) {
         setAddress(data.display_name);
@@ -202,8 +201,6 @@ function LocationPicker({ onSelectLocation, initialLat, initialLng }) {
       const encodedQuery = encodeURIComponent(searchInput.trim());
       const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodedQuery}&limit=1&addressdetails=1`;
 
-      console.log("Searching for location:", url);
-
       const response = await fetch(url, {
         headers: {
           "User-Agent": "RealEstateAppLocationPicker/1.0",
@@ -220,7 +217,6 @@ function LocationPicker({ onSelectLocation, initialLat, initialLng }) {
       }
 
       const data = await response.json();
-      console.log("Search results:", data);
 
       if (data && data.length > 0) {
         const { lat, lon, display_name } = data[0];

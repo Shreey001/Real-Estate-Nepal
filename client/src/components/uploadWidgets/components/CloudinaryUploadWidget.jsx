@@ -27,7 +27,6 @@ const CloudinaryUploadWidget = ({ uwConfig, onUploadSuccess }) => {
         (error, result) => {
           if (!error && result && result.event === "success") {
             // When upload is successful, call the callback with the result
-            console.log("Upload success!", result.info);
 
             if (onUploadSuccess) {
               onUploadSuccess(result.info.public_id, result.info.secure_url);

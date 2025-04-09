@@ -4,24 +4,33 @@ import jwt from "jsonwebtoken";
 
 export const getPosts = async (req, res) => {
   const query = req.query;
-  console.log('Incoming query parameters:', query);
+
   const userId = req.userId; // From verifyToken middleware
 
   try {
     // Build search conditions - return all posts if no query parameters
     let searchConditions = {};
-    
+
     // Only apply filters if specific filter parameters exist
-    if (query.type || query.property || query.minPrice || query.maxPrice || query.size || query.bedroom) {
+    if (
+      query.type ||
+      query.property ||
+      query.minPrice ||
+      query.maxPrice ||
+      query.size ||
+      query.bedroom
+    ) {
       searchConditions = {
         ...(query.type && { type: query.type }),
         ...(query.property && { property: query.property }),
-        ...(query.minPrice || query.maxPrice ? {
-          price: {
-            gte: parseInt(query.minPrice) || 0,
-            lte: parseInt(query.maxPrice) || 1000000,
-          }
-        } : {}),
+        ...(query.minPrice || query.maxPrice
+          ? {
+              price: {
+                gte: parseInt(query.minPrice) || 0,
+                lte: parseInt(query.maxPrice) || 1000000,
+              },
+            }
+          : {}),
         ...(query.size && { size: parseFloat(query.size) }),
         ...(query.bedroom && { bedroom: parseInt(query.bedroom) }),
       };
@@ -40,14 +49,12 @@ export const getPosts = async (req, res) => {
     }
 
     // Get all posts
-    console.log("Search conditions:", JSON.stringify(searchConditions, null, 2));
     const posts = await prisma.post.findMany({
       where: searchConditions,
       orderBy: {
         createdAt: "desc",
       },
     });
-    console.log("Fetched posts count:", posts.length);
 
     // If user is authenticated, get their saved posts
     let savedPostIds = new Set();

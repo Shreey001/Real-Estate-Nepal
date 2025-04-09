@@ -196,11 +196,9 @@ export const deleteChat = async (req, res) => {
     });
 
     if (!chat) {
-      return res
-        .status(404)
-        .json({
-          message: "Chat not found or you don't have permission to delete it",
-        });
+      return res.status(404).json({
+        message: "Chat not found or you don't have permission to delete it",
+      });
     }
 
     // Delete all messages associated with this chat first

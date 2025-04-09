@@ -1,92 +1,317 @@
 @import "../../responsive.scss";
 
 .profilePage {
-  display: flex;
-  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  height: calc(100vh - 100px);
+  gap: 20px;
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 20px;
+  color: #444;
 
-  @include md {
-    flex-direction: column;
-    overflow: scroll;
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr;
+
+    .chatPanel {
+      position: fixed;
+      right: -400px;
+      top: 0;
+      bottom: 0;
+      width: 400px;
+      height: 100vh;
+      z-index: 999;
+      transition: right 0.3s ease;
+      box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+
+      &.open {
+        right: 0;
+      }
+    }
   }
 
-  .details {
-    flex: 3;
-    overflow-y: scroll;
-    padding-bottom: 50px;
+  @media (max-width: 768px) {
+    padding: 10px;
+    height: auto;
 
-    @include md {
-      flex: none;
-      height: max-content;
-    }
-
-    .wrapper {
-      padding-right: 50px;
-      display: flex;
+    .profileHeader {
       flex-direction: column;
-      gap: 50px;
+      align-items: flex-start;
+      gap: 20px;
 
-      .title {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        h1 {
-          font-weight: 300;
-        }
-
-        button {
-          padding: 12px 24px;
-          background-color: #fece51;
-          cursor: pointer;
-          border: none;
-        }
-      }
-
-      .info {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-
-        span {
-          display: flex;
-          align-items: center;
-          gap: 20px;
-        }
-
-        button {
-          padding: 12px 24px;
-          height: 40px;
-          width: 100px;
-          border-radius: 3px;
-          color: white;
-          margin-top: 20px;
-          background-color: #009ab9;
-          cursor: pointer;
-          border: none;
-        }
-
-        img {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
+      .actions {
+        width: 100%;
+        justify-content: flex-start;
       }
     }
+
+    .chatPanel {
+      width: 100%;
+      right: -100%;
+
+      &.open {
+        right: 0;
+      }
+    }
+
+    .mobileActions {
+      display: flex;
+    }
   }
-  .chatContainer {
-    flex: 2;
-    background-color: #fcf5f3;
+
+  /* Main Content with Profile Styling */
+  .mainContentWithProfile {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
     height: 100%;
 
-    @include md {
-      flex: none;
-      height: max-content;
+    /* Profile Header */
+    .profileHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 25px 30px;
+      border-bottom: 1px solid #f0f2f5;
+
+      .userInfo {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        .avatar {
+          width: 70px;
+          height: 70px;
+          border-radius: 50%;
+          overflow: hidden;
+          border: 3px solid #f0f2f5;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .userDetails {
+          h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 0 5px 0;
+            color: #333;
+          }
+
+          p {
+            font-size: 14px;
+            color: #65676b;
+            margin: 0;
+          }
+        }
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .createButton,
+        .editButton,
+        .logoutButton {
+          padding: 10px 16px;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 14px;
+          cursor: pointer;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+        }
+
+        .createButton {
+          background-color: #1877f2;
+          color: white;
+          border: none;
+
+          &:hover {
+            background-color: darken(#1877f2, 5%);
+          }
+        }
+
+        .editButton {
+          background-color: #f0f2f5;
+          color: #444;
+          border: none;
+
+          &:hover {
+            background-color: #e4e6eb;
+          }
+        }
+
+        .logoutButton {
+          background-color: #fff;
+          color: #ff4d4f;
+          border: 1px solid #ff4d4f;
+
+          &:hover {
+            background-color: #fff5f5;
+          }
+        }
+      }
     }
 
-    .wrapper {
-      padding: 0px 20px;
-      height: 100%;
+    /* Tab Navigation */
+    .tabNavigation {
+      display: flex;
+      border-bottom: 1px solid #f0f2f5;
+      background-color: #fff;
+
+      .tab {
+        flex: 1;
+        padding: 16px;
+        text-align: center;
+        font-weight: 500;
+        color: #65676b;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        max-width: 200px;
+
+        .icon {
+          font-size: 18px;
+        }
+
+        &:hover {
+          background-color: #f0f2f5;
+        }
+
+        &.active {
+          color: #1877f2;
+          border-bottom-color: #1877f2;
+          font-weight: 600;
+        }
+      }
+    }
+
+    /* Property Content */
+    .propertyContent {
+      flex: 1;
+      overflow: auto;
+      padding: 20px 30px;
+
+      .loading,
+      .error,
+      .emptyState {
+        padding: 40px;
+        text-align: center;
+        color: #65676b;
+      }
+
+      .error {
+        color: #ff4d4f;
+      }
+    }
+  }
+
+  /* Chat Panel Styling */
+  .chatPanel {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .closeChat {
+      display: none; /* Hide close button in desktop mode */
+
+      @media (max-width: 1200px) {
+        display: flex; /* Show close button in tablet/mobile mode */
+      }
+    }
+
+    .chatHeader {
+      padding: 20px;
+      border-bottom: 1px solid #f0f2f5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      h2 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0;
+        color: #333;
+      }
+
+      .closeChat {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #f0f2f5;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 18px;
+
+        &:hover {
+          background-color: #e4e6eb;
+        }
+      }
+    }
+
+    .chatContainer {
+      flex: 1;
+      overflow: hidden;
+
+      .loading,
+      .error {
+        padding: 40px;
+        text-align: center;
+        color: #65676b;
+      }
+
+      .error {
+        color: #ff4d4f;
+      }
+    }
+  }
+
+  /* Mobile Actions */
+  .mobileActions {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 998;
+
+    .mobileToggleChat {
+      padding: 12px 18px;
+      background-color: #1877f2;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+      &:hover {
+        background-color: darken(#1877f2, 5%);
+      }
     }
   }
 }
