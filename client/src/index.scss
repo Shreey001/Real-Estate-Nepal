@@ -11,12 +11,27 @@ a {
 
 body {
   font-family: "Lato", sans-serif;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-// Add specific override for the add page route
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+// General layout fixes
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .layout .content {
-  overflow: auto;
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
 }
 
 // Override specifically for the new post page

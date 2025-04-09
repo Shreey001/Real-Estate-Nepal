@@ -57,7 +57,7 @@ function SearchBar() {
           type="text"
           name="searchTerm"
           value={query.searchTerm}
-          placeholder="Enter city or location (e.g. New York, Manhattan)"
+          placeholder="Enter city or location"
           onChange={handleChange}
         />
         <input
@@ -65,7 +65,7 @@ function SearchBar() {
           name="minPrice"
           min={0}
           value={query.minPrice}
-          placeholder="Min Price"
+          placeholder="Min Price (0)"
           onChange={handleChange}
         />
         <input
@@ -73,7 +73,7 @@ function SearchBar() {
           name="maxPrice"
           min={0}
           value={query.maxPrice}
-          placeholder="Max Price"
+          placeholder="Max Price (50000000)"
           onChange={handleChange}
         />
         <Link to={getSearchUrl()} onClick={handleSearch}>

@@ -91,14 +91,16 @@ function ListPage() {
 
     // Apply listing type filter (buy/rent)
     if (listingType && listingType !== "all") {
-      filtered = filtered.filter((property) => property.type === listingType);
+      filtered = filtered.filter(
+        (property) => property && property.type === listingType
+      );
     }
 
     // Apply property type filter (house, apartment, etc)
     const propertyTypeFilter = searchParams.get("property");
     if (propertyTypeFilter) {
       filtered = filtered.filter(
-        (property) => property.property === propertyTypeFilter
+        (property) => property && property.property === propertyTypeFilter
       );
     }
 
@@ -106,14 +108,14 @@ function ListPage() {
     const minPrice = searchParams.get("minPrice");
     if (minPrice) {
       filtered = filtered.filter(
-        (property) => property.price >= parseInt(minPrice)
+        (property) => property && property.price >= parseInt(minPrice)
       );
     }
 
     const maxPrice = searchParams.get("maxPrice");
     if (maxPrice) {
       filtered = filtered.filter(
-        (property) => property.price <= parseInt(maxPrice)
+        (property) => property && property.price <= parseInt(maxPrice)
       );
     }
 
@@ -121,7 +123,7 @@ function ListPage() {
     const bedrooms = searchParams.get("bedroom");
     if (bedrooms) {
       filtered = filtered.filter(
-        (property) => property.bedroom >= parseInt(bedrooms)
+        (property) => property && property.bedroom >= parseInt(bedrooms)
       );
     }
 
@@ -129,7 +131,7 @@ function ListPage() {
     const bathrooms = searchParams.get("bathroom");
     if (bathrooms) {
       filtered = filtered.filter(
-        (property) => property.bathroom >= parseInt(bathrooms)
+        (property) => property && property.bathroom >= parseInt(bathrooms)
       );
     }
 
@@ -139,9 +141,13 @@ function ListPage() {
       const searchLower = searchTermFilter.toLowerCase();
       filtered = filtered.filter(
         (property) =>
-          property.title.toLowerCase().includes(searchLower) ||
-          property.address.toLowerCase().includes(searchLower) ||
-          property.description.toLowerCase().includes(searchLower)
+          property &&
+          ((property.title &&
+            property.title.toLowerCase().includes(searchLower)) ||
+            (property.address &&
+              property.address.toLowerCase().includes(searchLower)) ||
+            (property.description &&
+              property.description.toLowerCase().includes(searchLower)))
       );
     }
 
@@ -250,7 +256,9 @@ function ListPage() {
             <Await
               resolve={data.postResponse}
               errorElement={
-                <div className="mapPlaceholder">Error loading map</div>
+                <div className="errorContainer">
+                  <p>Error loading map. Please try again.</p>
+                </div>
               }
             >
               {renderMap}

@@ -1,68 +1,178 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import "./navbar.scss";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useNotificationStore } from "../../lib/notificationStore";
 import { AuthContext } from "../../context/AuthContext";
 
 function Navbar() {
-  const [open, setOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
   const { currentUser } = useContext(AuthContext);
+  const location = useLocation();
+  const dropdownRef = useRef(null);
 
   const fetch = useNotificationStore((state) => state.fetch);
   const number = useNotificationStore((state) => state.number);
 
   useEffect(() => {
     fetch();
+  }, [fetch]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setActiveDropdown(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
+  // Close mobile menu and dropdowns when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setActiveDropdown(null);
+  }, [location.pathname]);
+
+  const toggleDropdown = (dropdown) => {
+    setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
+  };
+
   return (
-    <nav>
-      <div className="left">
-        <a href="/" className="logo">
-          <img src="/logo1.png" alt="" />
-        </a>
-        <a href="/">Home</a>
-        <a href="/">About</a>
-        <a href="/">Contact</a>
-        <a href="/">Agents</a>
-      </div>
-      <div className="right">
-        {currentUser ? (
-          <div className="user">
-            <img src={currentUser.avatar || "/noavatar.png"} alt="" />
-            <span>{currentUser.username}</span>
-            <Link to="/profile" className="profile">
-              {number > 0 && <div className="notification">{number}</div>}
-              <span>Profile</span>
+    <header className="navbar-wrapper">
+      <nav className="navbar">
+        <div className="navbar-logo">
+          <Link to="/">
+            <img src="/logo.png" alt="RealEstate Logo" />
+          </Link>
+        </div>
+
+        <div className={`navbar-links ${mobileMenuOpen ? "active" : ""}`}>
+          <div className="nav-item">
+            <Link to="/" className={location.pathname === "/" ? "active" : ""}>
+              Home
             </Link>
           </div>
-        ) : (
-          <>
-            <Link className="login" to="/login">
-              Sign in
+
+          <div className="nav-item">
+            <Link
+              to="/list"
+              className={location.pathname === "/list" ? "active" : ""}
+            >
+              Explore
             </Link>
-            <Link className="register" to="/register">
-              Sign up
+          </div>
+
+          <div className="nav-item">
+            <Link
+              to="/services"
+              className={location.pathname === "/services" ? "active" : ""}
+            >
+              Services
             </Link>
-          </>
-        )}
-        <div className="menuIcon">
-          <img
-            src="/menu.png"
-            alt=""
-            onClick={() => setOpen((prev) => !prev)}
-          />
+          </div>
+
+          <div className="nav-item">
+            <Link
+              to="/agents"
+              className={location.pathname === "/agents" ? "active" : ""}
+            >
+              Agents
+            </Link>
+          </div>
+
+          <div className="nav-item">
+            <Link
+              to="/about"
+              className={location.pathname === "/about" ? "active" : ""}
+            >
+              About
+            </Link>
+          </div>
         </div>
-        <div className={open ? "menu active" : "menu"}>
-          <a href="/">Home</a>
-          <a href="/">About</a>
-          <a href="/">Contact</a>
-          <a href="/">Agents</a>
-          <Link to="/login">Sign in</Link>
-          <Link to="/register">Sign up</Link>
+
+        <div className="navbar-actions">
+          {currentUser ? (
+            <div className="user-menu-wrapper">
+              <div
+                className="user-menu"
+                ref={activeDropdown === "user" ? dropdownRef : null}
+                onClick={() => toggleDropdown("user")}
+              >
+                <div className="user-info">
+                  <img
+                    src={currentUser.avatar || "/default-avatar.png"}
+                    alt={currentUser.username}
+                    className="user-avatar"
+                  />
+                  <span className="user-name">{currentUser.username}</span>
+                  {number > 0 && (
+                    <div className="notification-badge">{number}</div>
+                  )}
+                  <span className="dropdown-icon">▼</span>
+                </div>
+
+                {activeDropdown === "user" && (
+                  <div className="user-dropdown">
+                    <Link to="/profile">
+                      <span className="menu-icon">👤</span>
+                      My Profile
+                    </Link>
+                    <Link to="/profile">
+                      <span className="menu-icon">💬</span>
+                      Messages
+                      {number > 0 && (
+                        <span className="menu-badge">{number}</span>
+                      )}
+                    </Link>
+                    <Link to="/add">
+                      <span className="menu-icon">🏠</span>
+                      Add Property
+                    </Link>
+                    <Link to="/profileUpdate">
+                      <span className="menu-icon">⚙️</span>
+                      Settings
+                    </Link>
+                    <button
+                      onClick={() => {
+                        // Add logout functionality here
+                        console.log("Logout clicked");
+                      }}
+                    >
+                      <span className="menu-icon">🚪</span>
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="auth-buttons">
+              <Link to="/login" className="login-button">
+                Log In
+              </Link>
+              <Link to="/register" className="signup-button">
+                Sign Up
+              </Link>
+            </div>
+          )}
+
+          <button
+            className="mobile-menu-toggle"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 }
 
