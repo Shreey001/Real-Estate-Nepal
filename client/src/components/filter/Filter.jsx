@@ -318,9 +318,6 @@ const Filter = () => {
               <option value="4">4+</option>
             </select>
           </div>
-          <button type="submit" aria-label="Search properties">
-            <img src="/search.png" alt="" />
-          </button>
         </div>
 
         {hasFilters && (
