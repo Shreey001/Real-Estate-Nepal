@@ -8,7 +8,7 @@ import { useContext, Suspense } from "react";
 import { useLoaderData, Await } from "react-router-dom";
 
 function ProfilePage() {
-  const { postResponse } = useLoaderData();
+  const { postResponse, chatResponse } = useLoaderData();
   const { currentUser, updateUser } = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -91,7 +91,17 @@ function ProfilePage() {
       </div>
       <div className="chatContainer">
         <div className="wrapper">
-          <Chat />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Await
+              resolve={chatResponse}
+              errorElement={<div>Error Loading Chats</div>}
+            >
+              {(chatResponse) => {
+                console.log("Chat data in profile:", chatResponse.data);
+                return <Chat chats={chatResponse.data || []} />;
+              }}
+            </Await>
+          </Suspense>
         </div>
       </div>
     </div>

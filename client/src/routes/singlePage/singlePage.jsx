@@ -15,12 +15,14 @@ import apiRequest from "../../lib/apiRequest";
 import { Suspense } from "react";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
+import ChatModal from "../../components/chat/ChatModal";
 
 function SinglePage() {
   const { post: postPromise } = useLoaderData();
   const { currentUser } = useContext(AuthContext);
   const revalidator = useRevalidator();
   const navigate = useNavigate();
+  const [showChatModal, setShowChatModal] = useState(false);
 
   const handleSave = useCallback(
     async (post, setSaved) => {
@@ -184,7 +186,16 @@ function SinglePage() {
             </div>
 
             <div className="buttons">
-              <button>
+              <button
+                onClick={() => {
+                  console.log("Full post object:", post);
+                  console.log(
+                    "Contact Owner clicked - post.user data:",
+                    post.user
+                  );
+                  setShowChatModal(true);
+                }}
+              >
                 <IoChatbubbleEllipsesOutline />
                 Contact Owner
               </button>
@@ -198,6 +209,15 @@ function SinglePage() {
             </div>
           </div>
         </div>
+
+        {showChatModal && (
+          <ChatModal
+            receiverId={post.userId}
+            receiverUsername={post.user?.username || "Property Owner"}
+            receiverAvatar={post.user?.avatar || "/default-avatar.png"}
+            onClose={() => setShowChatModal(false)}
+          />
+        )}
       </div>
     );
   };
