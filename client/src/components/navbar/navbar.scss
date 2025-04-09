@@ -157,6 +157,25 @@
           border-radius: 0 3px 3px 0;
         }
       }
+
+      &.active-section {
+        background-color: var(--primary-light);
+        color: var(--primary-color);
+        font-weight: 600;
+
+        /* Add a left border indicator for active section */
+        border-left: 3px solid var(--primary-color);
+        padding-left: 13px; /* Adjust padding to maintain alignment */
+
+        .menu-icon {
+          font-size: 20px; /* Slightly larger icon for active section */
+        }
+
+        .menu-badge {
+          background-color: #d32f2f; /* Slightly darker red for contrast against the active background */
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+      }
     }
   }
 }
@@ -255,7 +274,7 @@
         }
 
         .notification-badge {
-          background-color: var(--secondary-color);
+          background-color: #e53935;
           color: white;
           font-size: 12px;
           font-weight: bold;
@@ -269,6 +288,7 @@
           top: 0;
           right: 0;
           transform: translate(25%, -25%);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
       }
 
@@ -285,6 +305,19 @@
         overflow: hidden;
         border: 1px solid var(--border-color);
 
+        animation: dropdownFadeIn 0.2s ease-out;
+
+        @keyframes dropdownFadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         a,
         button {
           padding: 12px 16px;
@@ -300,10 +333,30 @@
           text-decoration: none;
           transition: all 0.2s;
           cursor: pointer;
+          position: relative;
 
           &:hover {
             background-color: var(--primary-light);
             color: var(--primary-color);
+          }
+
+          &.active-section {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            font-weight: 600;
+
+            /* Add a left border indicator for active section */
+            border-left: 3px solid var(--primary-color);
+            padding-left: 13px; /* Adjust padding to maintain alignment */
+
+            .menu-icon {
+              font-size: 20px; /* Slightly larger icon for active section */
+            }
+
+            .menu-badge {
+              background-color: #d32f2f; /* Slightly darker red for contrast against the active background */
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            }
           }
 
           .menu-icon {
@@ -311,7 +364,7 @@
           }
 
           .menu-badge {
-            background-color: var(--secondary-color);
+            background-color: #e53935;
             color: white;
             font-size: 11px;
             font-weight: bold;
@@ -322,7 +375,13 @@
             align-items: center;
             justify-content: center;
             margin-left: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
           }
+        }
+
+        a:not(:last-child),
+        button:not(:last-child) {
+          border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
       }
     }

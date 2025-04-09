@@ -1,7 +1,7 @@
 import Chat from "../../components/chat/Chat";
 import List from "../../components/list/List";
 import "./profilePage.scss";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import apiRequest from "../../lib/apiRequest";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext, Suspense, useState, useEffect } from "react";
@@ -13,8 +13,25 @@ function ProfilePage() {
   const [activeTab, setActiveTab] = useState("myProperties");
   const [chatOpen, setChatOpen] = useState(window.innerWidth > 1200);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const location = useLocation();
 
   const navigate = useNavigate();
+
+  // Check URL parameters for section focus
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const section = searchParams.get("section");
+
+    if (section === "messages") {
+      // Open messages panel
+      setChatOpen(true);
+
+      // If on mobile, set active tab to messages
+      if (windowWidth <= 1200) {
+        setActiveTab("messages");
+      }
+    }
+  }, [location.search, windowWidth]);
 
   // Add window resize listener
   useEffect(() => {
@@ -110,8 +127,13 @@ function ProfilePage() {
           {/* Only show Messages toggle on tablet/mobile */}
           {windowWidth <= 1200 && (
             <button
-              className={`tab ${chatOpen ? "active" : ""}`}
-              onClick={toggleChat}
+              className={`tab ${
+                activeTab === "messages" || chatOpen ? "active" : ""
+              }`}
+              onClick={() => {
+                setActiveTab("messages");
+                toggleChat();
+              }}
             >
               <span className="icon">💬</span>
               Messages
@@ -121,32 +143,48 @@ function ProfilePage() {
 
         {/* Property Content */}
         <div className="propertyContent">
-          <Suspense
-            fallback={<div className="loading">Loading properties...</div>}
-          >
-            <Await
-              resolve={postResponse}
-              errorElement={
-                <div className="error">Error Loading Properties</div>
-              }
+          {activeTab !== "messages" && (
+            <Suspense
+              fallback={<div className="loading">Loading properties...</div>}
             >
-              {(resolvedData) =>
-                renderList(
-                  resolvedData,
-                  activeTab === "myProperties" ? "user" : "saved"
-                )
-              }
-            </Await>
-          </Suspense>
+              <Await
+                resolve={postResponse}
+                errorElement={
+                  <div className="error">Error Loading Properties</div>
+                }
+              >
+                {(resolvedData) =>
+                  renderList(
+                    resolvedData,
+                    activeTab === "myProperties" ? "user" : "saved"
+                  )
+                }
+              </Await>
+            </Suspense>
+          )}
         </div>
       </div>
 
       {/* Chat Panel */}
-      <div className={`chatPanel ${chatOpen ? "open" : ""}`}>
+      <div
+        className={`chatPanel ${chatOpen ? "open" : ""} ${
+          new URLSearchParams(location.search).get("section") === "messages"
+            ? "highlighted"
+            : ""
+        }`}
+      >
         <div className="chatHeader">
           <h2>Messages</h2>
           {windowWidth <= 1200 && (
-            <button className="closeChat" onClick={() => setChatOpen(false)}>
+            <button
+              className="closeChat"
+              onClick={() => {
+                setChatOpen(false);
+                setActiveTab("myProperties");
+                // Remove the section parameter from URL
+                navigate("/profile", { replace: true });
+              }}
+            >
               ×
             </button>
           )}
@@ -170,7 +208,14 @@ function ProfilePage() {
 
       {/* Mobile Toggle for Chat */}
       <div className="mobileActions">
-        <button className="mobileToggleChat" onClick={toggleChat}>
+        <button
+          className={`mobileToggleChat ${
+            new URLSearchParams(location.search).get("section") === "messages"
+              ? "highlighted"
+              : ""
+          }`}
+          onClick={toggleChat}
+        >
           {chatOpen ? "Close Messages" : "Open Messages"}
         </button>
       </div>

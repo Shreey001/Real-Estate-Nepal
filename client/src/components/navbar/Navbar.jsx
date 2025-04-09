@@ -122,7 +122,15 @@ function Navbar() {
                       <span className="menu-icon">👤</span>
                       My Profile
                     </Link>
-                    <Link to="/profile">
+                    <Link
+                      to="/profile?section=messages"
+                      className={
+                        location.pathname === "/profile" &&
+                        location.search.includes("section=messages")
+                          ? "active-section"
+                          : ""
+                      }
+                    >
                       <span className="menu-icon">💬</span>
                       Messages
                       {number > 0 && (

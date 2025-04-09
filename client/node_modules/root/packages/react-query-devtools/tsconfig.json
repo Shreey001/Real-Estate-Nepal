@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist-ts",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "jsx": "react-jsx",
+    "moduleResolution": "Bundler"
+  },
+  "include": [
+    "src",
+    "test-setup.ts",
+    "*.config.js",
+    "*.config.ts",
+    "package.json"
+  ],
+  "references": [{ "path": "../query-devtools" }, { "path": "../react-query" }]
+}
