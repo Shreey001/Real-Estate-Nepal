@@ -21,11 +21,22 @@ function SearchBar() {
 
   const getSearchUrl = () => {
     const params = new URLSearchParams();
-    if (query.type) params.append("type", query.type);
+
+    // Set type parameter for buy/rent
+    if (query.type) {
+      params.append("type", query.type);
+    }
+
     if (query.searchTerm) params.append("searchTerm", query.searchTerm);
     if (query.minPrice) params.append("minPrice", query.minPrice);
     if (query.maxPrice) params.append("maxPrice", query.maxPrice);
-    return `/list?${params.toString()}`;
+
+    const url = `/list?${params.toString()}`;
+    return url;
+  };
+
+  const handleSearch = () => {
+    // Function kept for potential future functionality
   };
 
   return (
@@ -65,7 +76,7 @@ function SearchBar() {
           placeholder="Max Price"
           onChange={handleChange}
         />
-        <Link to={getSearchUrl()}>
+        <Link to={getSearchUrl()} onClick={handleSearch}>
           <button type="button">
             <img src="/search.png" alt="Search" />
           </button>
