@@ -79,7 +79,7 @@ function Footer() {
               <Link to="/list?type=rent">For Rent</Link>
             </li>
             <li>
-              <Link to="/list?type=sale">For Sale</Link>
+              <Link to="/list?type=buy">For Sale</Link>
             </li>
             <li>
               <Link to="/list?featured=true">Featured Properties</Link>
