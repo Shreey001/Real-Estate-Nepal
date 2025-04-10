@@ -3,12 +3,12 @@ import "./navbar.scss";
 import { Link, useLocation } from "react-router-dom";
 import { useNotificationStore } from "../../lib/notificationStore";
 import { AuthContext } from "../../context/AuthContext";
-
+import apiRequest from "../../lib/apiRequest";
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [scrolled, setScrolled] = useState(false);
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, updateUser } = useContext(AuthContext);
   const location = useLocation();
   const dropdownRef = useRef(null);
 
@@ -59,6 +59,15 @@ export default function Navbar() {
 
   const toggleDropdown = (dropdown) => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
+  };
+  const handleLogout = async () => {
+    try {
+      await apiRequest.post("/auth/logout");
+      updateUser(null);
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -171,12 +180,7 @@ export default function Navbar() {
                         <span className="menu-icon">⚙️</span>
                         Settings
                       </Link>
-                      <button
-                        onClick={() => {
-                          // Add logout functionality here
-                          console.log("Logout clicked");
-                        }}
-                      >
+                      <button onClick={handleLogout}>
                         <span className="menu-icon">🚪</span>
                         Logout
                       </button>
