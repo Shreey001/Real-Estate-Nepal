@@ -69,9 +69,6 @@ function Footer() {
             <li>
               <Link to="/about">About</Link>
             </li>
-            <li>
-              <Link to="/contact">Contact</Link>
-            </li>
           </ul>
         </div>
 
@@ -101,15 +98,15 @@ function Footer() {
           <div className="contact-info">
             <div className="contact-item">
               <i className="fas fa-map-marker-alt"></i>
-              <span>123 Real Estate Blvd, New York, NY 10001</span>
+              <span>Real Estate Nepal, Kathmandu, Nepal </span>
             </div>
             <div className="contact-item">
               <i className="fas fa-phone-alt"></i>
-              <span>+1 (555) 123-4567</span>
+              <span>+977 9818000000</span>
             </div>
             <div className="contact-item">
               <i className="fas fa-envelope"></i>
-              <span>info@realestate.com</span>
+              <span>info@realestatenepal.com</span>
             </div>
           </div>
           <div className="newsletter">
