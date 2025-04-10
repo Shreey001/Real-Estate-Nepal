@@ -7,6 +7,10 @@ const propertyTypes = ["house", "apartment", "condo", "land"];
 const bedroomOptions = ["Any", "1+", "2+", "3+", "4+", "5+"];
 const bathroomOptions = ["Any", "1+", "2+", "3+", "4+"];
 
+// Default price values
+const DEFAULT_MIN_PRICE = "10000";
+const DEFAULT_MAX_PRICE = "100000000";
+
 const Filter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isCollapsed, setIsCollapsed] = useState(window.innerWidth <= 768);
@@ -14,8 +18,12 @@ const Filter = () => {
   const [searchTerm, setSearchTerm] = useState(
     searchParams.get("searchTerm") || ""
   );
-  const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
-  const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
+  const [minPrice, setMinPrice] = useState(
+    searchParams.get("minPrice") || DEFAULT_MIN_PRICE
+  );
+  const [maxPrice, setMaxPrice] = useState(
+    searchParams.get("maxPrice") || DEFAULT_MAX_PRICE
+  );
 
   // State for property type (house, apartment, etc)
   const [propertyType, setPropertyType] = useState(
@@ -53,8 +61,10 @@ const Filter = () => {
   // Keep search parameters in sync with URL
   useEffect(() => {
     setSearchTerm(searchParams.get("searchTerm") || "");
-    setMinPrice(searchParams.get("minPrice") || "");
-    setMaxPrice(searchParams.get("maxPrice") || "");
+
+    // Apply default min and max prices if not provided in URL
+    setMinPrice(searchParams.get("minPrice") || DEFAULT_MIN_PRICE);
+    setMaxPrice(searchParams.get("maxPrice") || DEFAULT_MAX_PRICE);
 
     // Handle property type (house, apartment, etc)
     const propertyFromUrl = searchParams.get("property");
@@ -102,11 +112,9 @@ const Filter = () => {
     if (searchTerm) params.set("searchTerm", searchTerm);
     else params.delete("searchTerm");
 
-    if (minPrice) params.set("minPrice", minPrice);
-    else params.delete("minPrice");
-
-    if (maxPrice) params.set("maxPrice", maxPrice);
-    else params.delete("maxPrice");
+    // Always include min and max prices with defaults if not specified
+    params.set("minPrice", minPrice || DEFAULT_MIN_PRICE);
+    params.set("maxPrice", maxPrice || DEFAULT_MAX_PRICE);
 
     // Handle property type (house, apartment, etc)
     if (propertyType) {
@@ -136,29 +144,36 @@ const Filter = () => {
 
   const handleReset = () => {
     setSearchTerm("");
-    setMinPrice("");
-    setMaxPrice("");
+    setMinPrice(DEFAULT_MIN_PRICE);
+    setMaxPrice(DEFAULT_MAX_PRICE);
     setPropertyType("");
     setListingType("all");
     setBedroom("");
     setBathroom("");
-    setSearchParams({});
+
+    // Reset URL params but keep the default price values
+    const params = new URLSearchParams();
+    params.set("minPrice", DEFAULT_MIN_PRICE);
+    params.set("maxPrice", DEFAULT_MAX_PRICE);
+    setSearchParams(params);
   };
 
   const hasFilters =
     searchTerm ||
-    minPrice ||
-    maxPrice ||
     propertyType ||
     (listingType && listingType !== "all") ||
     bedroom ||
-    bathroom;
+    bathroom ||
+    // Check if min/max prices are different from defaults
+    (minPrice && minPrice !== DEFAULT_MIN_PRICE) ||
+    (maxPrice && maxPrice !== DEFAULT_MAX_PRICE);
 
   // Function to get active filter count
   const getActiveFilterCount = () => {
     let count = 0;
     if (searchTerm) count++;
-    if (minPrice || maxPrice) count++;
+    if (minPrice && minPrice !== DEFAULT_MIN_PRICE) count++;
+    if (maxPrice && maxPrice !== DEFAULT_MAX_PRICE) count++;
     if (propertyType) count++;
     if (listingType && listingType !== "all") count++;
     if (bedroom) count++;

@@ -5,6 +5,10 @@ import Map from "../../components/map/Map";
 import { useLoaderData, Await, useSearchParams } from "react-router-dom";
 import { Suspense, useState, useEffect, useMemo } from "react";
 
+// Default price values - should match Filter component
+const DEFAULT_MIN_PRICE = "1";
+const DEFAULT_MAX_PRICE = "100000000";
+
 function ListPage() {
   const data = useLoaderData();
   const [searchParams] = useSearchParams();
@@ -34,10 +38,10 @@ function ListPage() {
       property: searchParams.get("property"),
       minPrice: searchParams.get("minPrice")
         ? parseInt(searchParams.get("minPrice"))
-        : null,
+        : parseInt(DEFAULT_MIN_PRICE),
       maxPrice: searchParams.get("maxPrice")
         ? parseInt(searchParams.get("maxPrice"))
-        : null,
+        : parseInt(DEFAULT_MAX_PRICE),
       bedroom: searchParams.get("bedroom"),
       bathroom: searchParams.get("bathroom"),
       searchTerm: searchParams.get("searchTerm"),
@@ -116,20 +120,16 @@ function ListPage() {
       );
     }
 
-    // Filter by price range
-    const minPrice = searchParams.get("minPrice");
-    if (minPrice) {
-      filtered = filtered.filter(
-        (property) => property && property.price >= parseInt(minPrice)
-      );
-    }
+    // Filter by price range - use defaults if not specified
+    const minPrice = searchParams.get("minPrice") || DEFAULT_MIN_PRICE;
+    filtered = filtered.filter(
+      (property) => property && property.price >= parseInt(minPrice)
+    );
 
-    const maxPrice = searchParams.get("maxPrice");
-    if (maxPrice) {
-      filtered = filtered.filter(
-        (property) => property && property.price <= parseInt(maxPrice)
-      );
-    }
+    const maxPrice = searchParams.get("maxPrice") || DEFAULT_MAX_PRICE;
+    filtered = filtered.filter(
+      (property) => property && property.price <= parseInt(maxPrice)
+    );
 
     // Filter by bedroom count
     const bedrooms = searchParams.get("bedroom");
