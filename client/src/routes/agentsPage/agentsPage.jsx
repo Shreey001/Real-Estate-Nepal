@@ -1,176 +1,41 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./agentsPage.scss";
+import apiRequest from "../../lib/apiRequest";
 
 function AgentsPage() {
-  const [activeFilter, setActiveFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredAgents, setFilteredAgents] = useState([]);
   const [selectedAgent, setSelectedAgent] = useState(null);
+  const [agents, setAgents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Agent data
-  const agents = [
-    {
-      id: 1,
-      name: "Rajesh Sharma",
-      photo: "/testimonials/person1.png",
-      role: "Senior Real Estate Agent",
-      specialization: "Residential",
-      location: "Kathmandu",
-      experience: 12,
-      languages: ["English", "Nepali", "Hindi"],
-      email: "rajesh.sharma@realestate.com",
-      phone: "+977 9801234567",
-      bio: "Rajesh has been helping families find their dream homes in Kathmandu for over 12 years. With his deep knowledge of the local market and excellent negotiation skills, he consistently delivers outstanding results for his clients.",
-      listings: 48,
-      reviews: 4.9,
-      areas: ["Kathmandu", "Lalitpur", "Bhaktapur"],
-      achievements: ["Top Seller 2021", "Customer Excellence Award"],
-    },
-    {
-      id: 2,
-      name: "Priya Thapa",
-      photo: "/testimonials/person2.png",
-      role: "Luxury Property Specialist",
-      specialization: "Luxury",
-      location: "Lalitpur",
-      experience: 8,
-      languages: ["English", "Nepali"],
-      email: "priya.thapa@realestate.com",
-      phone: "+977 9802345678",
-      bio: "Specializing in luxury properties throughout Lalitpur and surrounding areas, Priya brings elegance and professionalism to every transaction. Her attention to detail and personalized approach make her the go-to agent for discerning clients.",
-      listings: 26,
-      reviews: 4.8,
-      areas: ["Lalitpur", "Babarmahal", "Jhamsikhel"],
-      achievements: ["Luxury Sales Leader", "International Property Award"],
-    },
-    {
-      id: 3,
-      name: "Santosh Gurung",
-      photo: "/testimonials/person3.png",
-      role: "Commercial Real Estate Expert",
-      specialization: "Commercial",
-      location: "Kathmandu",
-      experience: 15,
-      languages: ["English", "Nepali", "Chinese"],
-      email: "santosh.gurung@realestate.com",
-      phone: "+977 9803456789",
-      bio: "With 15 years of commercial real estate experience, Santosh has a proven track record of facilitating successful transactions for businesses of all sizes. His knowledge of market trends and investment strategies helps clients make informed decisions.",
-      listings: 37,
-      reviews: 4.7,
-      areas: ["New Baneshwor", "Tinkune", "Thapathali"],
-      achievements: ["Commercial Agent of the Year", "Million Dollar Club"],
-    },
-    {
-      id: 4,
-      name: "Asha Maharjan",
-      photo: "/testimonials/person4.png",
-      role: "First-Time Buyer Specialist",
-      specialization: "Residential",
-      location: "Bhaktapur",
-      experience: 6,
-      languages: ["English", "Nepali", "Newari"],
-      email: "asha.maharjan@realestate.com",
-      phone: "+977 9804567890",
-      bio: "Asha is passionate about helping first-time homebuyers navigate the complex process of purchasing their first property. Her patient guidance and extensive knowledge of financing options make her an invaluable resource for new buyers.",
-      listings: 31,
-      reviews: 4.9,
-      areas: ["Bhaktapur", "Thimi", "Katunje"],
-      achievements: ["Rookie of the Year", "Client Satisfaction Award"],
-    },
-    {
-      id: 5,
-      name: "Kamal Rai",
-      photo: "/testimonials/person5.png",
-      role: "Investment Property Advisor",
-      specialization: "Investment",
-      location: "Pokhara",
-      experience: 10,
-      languages: ["English", "Nepali"],
-      email: "kamal.rai@realestate.com",
-      phone: "+977 9805678901",
-      bio: "Kamal specializes in investment properties with a focus on rental yields and capital growth. His analytical approach and deep understanding of market cycles help investors build profitable real estate portfolios.",
-      listings: 42,
-      reviews: 4.6,
-      areas: ["Pokhara", "Lakeside", "Sarangkot"],
-      achievements: ["Investment Guru Award", "Property Portfolio Excellence"],
-    },
-    {
-      id: 6,
-      name: "Nisha Shrestha",
-      photo: "/testimonials/person2.png",
-      role: "New Development Specialist",
-      specialization: "New Developments",
-      location: "Kathmandu",
-      experience: 7,
-      languages: ["English", "Nepali", "French"],
-      email: "nisha.shrestha@realestate.com",
-      phone: "+977 9806789012",
-      bio: "Focusing on new developments and off-plan properties, Nisha helps clients secure the best units in upcoming projects. Her relationships with developers provide clients with exclusive access and preferential terms.",
-      listings: 23,
-      reviews: 4.8,
-      areas: ["Budhanilkantha", "Tokha", "Balaju"],
-      achievements: ["Development Sales Leader", "Project Launch Specialist"],
-    },
-    {
-      id: 7,
-      name: "Bikash Tamang",
-      photo: "/testimonials/person3.png",
-      role: "Land Acquisition Expert",
-      specialization: "Land",
-      location: "Kathmandu Valley",
-      experience: 13,
-      languages: ["English", "Nepali", "Tamang"],
-      email: "bikash.tamang@realestate.com",
-      phone: "+977 9807890123",
-      bio: "Bikash is a specialist in land transactions across the Kathmandu Valley. His extensive network and knowledge of zoning regulations and development potential make him invaluable for those looking to purchase land for either personal or commercial purposes.",
-      listings: 35,
-      reviews: 4.7,
-      areas: ["Kathmandu Valley", "Nagarkot", "Chandragiri"],
-      achievements: ["Land Transaction Expert", "Rural Development Pioneer"],
-    },
-    {
-      id: 8,
-      name: "Sunita Basnet",
-      photo: "/testimonials/person4.png",
-      role: "Rental Property Manager",
-      specialization: "Rentals",
-      location: "Lalitpur",
-      experience: 9,
-      languages: ["English", "Nepali"],
-      email: "sunita.basnet@realestate.com",
-      phone: "+977 9808901234",
-      bio: "Sunita excels in connecting tenants with the perfect rental properties while helping landlords maximize their returns. Her property management expertise ensures smooth operations and happy tenants for her portfolio of managed properties.",
-      listings: 56,
-      reviews: 4.8,
-      areas: ["Patan", "Sanepa", "Pulchowk"],
-      achievements: [
-        "Rental Management Excellence",
-        "Tenant Satisfaction Leader",
-      ],
-    },
-  ];
-
-  // Specialization filters
-  const specializations = [
-    { id: "all", name: "All Agents" },
-    { id: "Residential", name: "Residential" },
-    { id: "Commercial", name: "Commercial" },
-    { id: "Luxury", name: "Luxury" },
-    { id: "Investment", name: "Investment" },
-    { id: "Land", name: "Land" },
-    { id: "New Developments", name: "New Developments" },
-    { id: "Rentals", name: "Rentals" },
-  ];
-
-  // Filter agents based on specialization and search term
+  // Fetch agents from the API
   useEffect(() => {
-    let result = agents;
+    const fetchAgents = async () => {
+      setLoading(true);
+      try {
+        const response = await apiRequest.get("/users/agents");
+        setAgents(response.data);
+        setFilteredAgents(response.data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching agents:", err);
+        setError("Failed to load agents. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // Filter by specialization
-    if (activeFilter !== "all") {
-      result = result.filter((agent) => agent.specialization === activeFilter);
-    }
+    fetchAgents();
+  }, []);
+
+  // Filter agents based on search term only
+  useEffect(() => {
+    if (!agents.length) return;
+
+    let result = agents;
 
     // Filter by search term
     if (searchTerm.trim() !== "") {
@@ -184,12 +49,7 @@ function AgentsPage() {
     }
 
     setFilteredAgents(result);
-  }, [activeFilter, searchTerm]);
-
-  // Initialize filtered agents on component mount
-  useEffect(() => {
-    setFilteredAgents(agents);
-  }, []);
+  }, [searchTerm, agents]);
 
   return (
     <div className="agents-page">
@@ -233,34 +93,28 @@ function AgentsPage() {
               </svg>
             </button>
           </div>
-
-          <div className="specialization-filters">
-            {specializations.map((specialization) => (
-              <button
-                key={specialization.id}
-                className={activeFilter === specialization.id ? "active" : ""}
-                onClick={() => setActiveFilter(specialization.id)}
-              >
-                {specialization.name}
-              </button>
-            ))}
-          </div>
         </div>
 
-        {filteredAgents.length === 0 ? (
+        {loading ? (
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Loading agents...</p>
+          </div>
+        ) : error ? (
+          <div className="error-container">
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()}>Try Again</button>
+          </div>
+        ) : filteredAgents.length === 0 ? (
           <div className="no-results">
             <h3>No agents found</h3>
-            <p>
-              Try adjusting your search criteria or select a different
-              specialization
-            </p>
+            <p>Try adjusting your search criteria</p>
             <button
               onClick={() => {
-                setActiveFilter("all");
                 setSearchTerm("");
               }}
             >
-              Reset Filters
+              Reset Search
             </button>
           </div>
         ) : (
@@ -395,13 +249,6 @@ function AgentsPage() {
                 </div>
 
                 <div className="profile-section">
-                  <h3>Specializations</h3>
-                  <div className="specialization-tag">
-                    {selectedAgent.specialization}
-                  </div>
-                </div>
-
-                <div className="profile-section">
                   <h3>Areas Served</h3>
                   <div className="areas-list">
                     {selectedAgent.areas.map((area, index) => (
@@ -431,6 +278,15 @@ function AgentsPage() {
                     ))}
                   </ul>
                 </div>
+
+                {selectedAgent.joinedDate && (
+                  <div className="profile-section">
+                    <h3>Member Since</h3>
+                    <p>
+                      {new Date(selectedAgent.joinedDate).toLocaleDateString()}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div className="agent-profile-actions">

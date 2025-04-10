@@ -193,3 +193,51 @@ export const getNotificationNumber = async (req, res) => {
     res.status(500).json({ message: "Failed to get notification number" });
   }
 };
+
+// Add this new function to get all users for the agents page
+export const getAgents = async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        avatar: true,
+        createdAt: true,
+        _count: {
+          select: {
+            posts: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    // Transform the data to be agent-friendly
+    const agents = users.map((user) => ({
+      id: user.id,
+      name: user.username,
+      photo: user.avatar || "/default-avatar.png",
+      email: user.email,
+      listings: user._count.posts,
+      role: "Real Estate Agent", // Default role
+      experience: Math.floor(Math.random() * 10) + 1, // Random experience between 1-10 years
+      location: "Kathmandu", // Default location
+      reviews: (Math.random() * (5 - 4) + 4).toFixed(1), // Random rating between 4.0-5.0
+      languages: ["English", "Nepali"],
+      specialization: "Residential", // Default specialization
+      bio: `${user.username} is a dedicated real estate professional with extensive knowledge of the local market. They specialize in helping clients find their perfect property match.`,
+      phone: "+977 98XXXXXXXX", // Placeholder phone
+      areas: ["Kathmandu", "Lalitpur", "Bhaktapur"],
+      achievements: ["Top Listing Agent"],
+      joinedDate: user.createdAt,
+    }));
+
+    res.status(200).json(agents);
+  } catch (error) {
+    console.error("Error fetching agents:", error);
+    res.status(500).json({ message: "Failed to get agents" });
+  }
+};

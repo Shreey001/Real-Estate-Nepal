@@ -1,8 +1,11 @@
+@import "../../responsive.scss";
+
 .login {
   height: 100%;
   display: flex;
 
   .formContainer {
+    margin-top: 150px;
     flex: 3;
     height: 100%;
     display: flex;
@@ -49,7 +52,12 @@
   }
 
   .imgContainer {
+    @include sm {
+      display: none;
+    }
     flex: 2;
+    height: 100%;
+    width: 100%;
     background-color: #fcf5f3;
     display: flex;
     align-items: center;
