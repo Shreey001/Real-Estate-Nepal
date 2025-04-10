@@ -104,6 +104,18 @@ function ListPage() {
       );
     }
 
+    // Filter by city/location
+    const cityFilter = searchParams.get("city");
+    if (cityFilter) {
+      const cityLower = cityFilter.toLowerCase();
+      filtered = filtered.filter(
+        (property) =>
+          property &&
+          property.city &&
+          property.city.toLowerCase().includes(cityLower)
+      );
+    }
+
     // Filter by price range
     const minPrice = searchParams.get("minPrice");
     if (minPrice) {
