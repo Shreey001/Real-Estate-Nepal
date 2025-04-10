@@ -4,7 +4,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { useContext, useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-function HomePage() {
+export default function HomePage() {
   const { currentUser } = useContext(AuthContext);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const testimonialCarouselRef = useRef(null);
@@ -416,5 +416,3 @@ function HomePage() {
     </div>
   );
 }
-
-export default HomePage;

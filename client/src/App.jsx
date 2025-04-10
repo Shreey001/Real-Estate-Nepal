@@ -8,12 +8,16 @@ import Login from "./routes/login/login";
 import Register from "./routes/register/register";
 import ProfileUpdatePage from "./routes/profileUpdatePage/profileUpdatePage";
 import NewPostPage from "./routes/newPostPage/newPostPage";
+import ServicesPage from "./routes/servicesPage/servicesPage";
+import AgentsPage from "./routes/agentsPage/agentsPage";
+import AboutPage from "./routes/aboutPage/aboutPage";
 import {
   singlePageLoader,
   listPageLoader,
   profilePageLoader,
 } from "./lib/loaders";
-function App() {
+
+export default function App() {
   const router = createBrowserRouter([
     {
       path: "/",
@@ -42,6 +46,18 @@ function App() {
           element: <Register />,
         },
         {
+          path: "/services",
+          element: <ServicesPage />,
+        },
+        {
+          path: "/agents",
+          element: <AgentsPage />,
+        },
+        {
+          path: "/about",
+          element: <AboutPage />,
+        },
+        {
           element: <RequireAuth />,
           children: [
             {
@@ -65,5 +81,3 @@ function App() {
 
   return <RouterProvider router={router} />;
 }
-
-export default App;

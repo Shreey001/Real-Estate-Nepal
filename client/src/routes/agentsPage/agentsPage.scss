@@ -1,0 +1,637 @@
+// Define the responsive breakpoints
+$tablet-width: 768px;
+$mobile-width: 576px;
+
+// Responsive mixins
+@mixin tablet {
+  @media (max-width: $tablet-width) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: $mobile-width) {
+    @content;
+  }
+}
+
+.agents-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+
+  .agents-hero {
+    height: 300px;
+    width: 100%;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      url("/agents-hero.png");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 60px;
+    border-radius: 12px;
+    overflow: hidden;
+
+    @include mobile {
+      height: 200px;
+      margin-bottom: 40px;
+    }
+
+    .hero-content {
+      text-align: center;
+      color: white;
+      padding: 0 20px;
+
+      h1 {
+        font-size: 42px;
+        margin-bottom: 10px;
+
+        @include mobile {
+          font-size: 32px;
+        }
+      }
+
+      p {
+        font-size: 18px;
+        max-width: 600px;
+
+        @include mobile {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .agents-container {
+    padding: 0 20px;
+
+    .agents-intro {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 40px;
+
+      h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: #333;
+
+        @include mobile {
+          font-size: 28px;
+        }
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #666;
+      }
+    }
+
+    .agents-filter-container {
+      margin-bottom: 40px;
+
+      .search-bar {
+        display: flex;
+        max-width: 600px;
+        margin: 0 auto 30px;
+
+        input {
+          flex-grow: 1;
+          padding: 12px 16px;
+          border: 1px solid #ddd;
+          border-radius: 8px 0 0 8px;
+          font-size: 16px;
+          outline: none;
+
+          &:focus {
+            border-color: #3498db;
+          }
+        }
+
+        .search-button {
+          background-color: #3498db;
+          color: white;
+          border: none;
+          border-radius: 0 8px 8px 0;
+          padding: 0 20px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+
+          &:hover {
+            background-color: #2980b9;
+          }
+        }
+      }
+
+      .specialization-filters {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        @include mobile {
+          gap: 8px;
+        }
+
+        button {
+          padding: 8px 16px;
+          background-color: #f5f5f5;
+          border: 1px solid #ddd;
+          border-radius: 30px;
+          font-size: 14px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          @include mobile {
+            padding: 6px 12px;
+            font-size: 13px;
+          }
+
+          &:hover {
+            background-color: #e9e9e9;
+          }
+
+          &.active {
+            background-color: #2c3e50;
+            color: white;
+            border-color: #2c3e50;
+          }
+        }
+      }
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+
+      h3 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      p {
+        color: #666;
+        margin-bottom: 20px;
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #2980b9;
+        }
+      }
+    }
+
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+
+      @include mobile {
+        grid-template-columns: 1fr;
+      }
+
+      .agent-card {
+        display: flex;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        @include mobile {
+          flex-direction: column;
+        }
+
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .agent-image {
+          width: 40%;
+          min-height: 100%;
+          position: relative;
+          overflow: hidden;
+
+          @include mobile {
+            width: 100%;
+            height: 220px;
+          }
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+          }
+        }
+
+        .agent-info {
+          width: 60%;
+          padding: 25px;
+          display: flex;
+          flex-direction: column;
+
+          @include mobile {
+            width: 100%;
+          }
+
+          h3 {
+            font-size: 22px;
+            margin-bottom: 5px;
+            color: #333;
+          }
+
+          .agent-role {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 15px;
+          }
+
+          .agent-location,
+          .agent-experience {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #777;
+            font-size: 14px;
+
+            svg {
+              margin-right: 8px;
+              min-width: 16px;
+            }
+          }
+
+          .agent-stats {
+            display: flex;
+            margin: 15px 0;
+
+            .stat {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              margin-right: 30px;
+
+              .value {
+                font-size: 24px;
+                font-weight: 600;
+                color: #3498db;
+              }
+
+              .label {
+                font-size: 13px;
+                color: #777;
+              }
+            }
+          }
+
+          .agent-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+
+            button,
+            a {
+              flex: 1;
+              padding: 10px 0;
+              text-align: center;
+              border-radius: 6px;
+              font-size: 14px;
+              font-weight: 500;
+              cursor: pointer;
+              transition: all 0.3s ease;
+              text-decoration: none;
+            }
+
+            .view-profile {
+              background-color: #3498db;
+              color: white;
+              border: none;
+
+              &:hover {
+                background-color: #2980b9;
+              }
+            }
+
+            .contact {
+              background-color: transparent;
+              border: 1px solid #3498db;
+              color: #3498db;
+
+              &:hover {
+                background-color: rgba(52, 152, 219, 0.1);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .agent-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+
+    .agent-modal {
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      background-color: white;
+      border-radius: 12px;
+      position: relative;
+      overflow-y: auto;
+
+      .close-modal {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 30px;
+        color: #333;
+        cursor: pointer;
+        z-index: 10;
+      }
+
+      .agent-modal-content {
+        padding: 40px;
+
+        @include mobile {
+          padding: 30px 20px;
+        }
+
+        .agent-profile-header {
+          display: flex;
+          margin-bottom: 40px;
+
+          @include mobile {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+          }
+
+          .agent-profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-right: 40px;
+            flex-shrink: 0;
+
+            @include mobile {
+              margin-right: 0;
+              margin-bottom: 20px;
+            }
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+
+          .agent-profile-intro {
+            flex-grow: 1;
+
+            h2 {
+              font-size: 32px;
+              margin-bottom: 10px;
+              color: #333;
+            }
+
+            .agent-profile-role {
+              font-size: 18px;
+              color: #666;
+              margin-bottom: 20px;
+            }
+
+            .agent-contact-info {
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+
+              .contact-item {
+                display: flex;
+                align-items: center;
+
+                svg {
+                  margin-right: 10px;
+                  color: #3498db;
+                }
+
+                span {
+                  font-size: 16px;
+                }
+              }
+            }
+          }
+        }
+
+        .agent-profile-details {
+          margin-bottom: 30px;
+
+          .profile-section {
+            margin-bottom: 30px;
+
+            h3 {
+              font-size: 20px;
+              margin-bottom: 15px;
+              color: #333;
+              position: relative;
+
+              &:after {
+                content: "";
+                position: absolute;
+                bottom: -6px;
+                left: 0;
+                width: 50px;
+                height: 3px;
+                background-color: #3498db;
+              }
+            }
+
+            p {
+              line-height: 1.7;
+              color: #666;
+            }
+
+            .specialization-tag {
+              display: inline-block;
+              padding: 6px 12px;
+              background-color: #3498db;
+              color: white;
+              border-radius: 30px;
+              font-size: 14px;
+            }
+
+            .areas-list,
+            .languages-list {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 10px;
+
+              .area-tag,
+              .language-tag {
+                padding: 6px 12px;
+                background-color: #f0f0f0;
+                border-radius: 30px;
+                font-size: 14px;
+                color: #555;
+              }
+            }
+
+            .achievements-list {
+              list-style-type: none;
+              padding: 0;
+
+              li {
+                position: relative;
+                padding-left: 24px;
+                margin-bottom: 10px;
+                font-size: 15px;
+                color: #666;
+
+                &:before {
+                  content: "🏆";
+                  position: absolute;
+                  left: 0;
+                  top: 0;
+                }
+              }
+            }
+          }
+        }
+
+        .agent-profile-actions {
+          display: flex;
+          gap: 15px;
+
+          @include mobile {
+            flex-direction: column;
+            gap: 10px;
+          }
+
+          a {
+            flex: 1;
+            padding: 14px 20px;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+
+            &.email-agent {
+              background-color: #3498db;
+              color: white;
+
+              &:hover {
+                background-color: #2980b9;
+              }
+            }
+
+            &.call-agent {
+              background-color: #2ecc71;
+              color: white;
+
+              &:hover {
+                background-color: #27ae60;
+              }
+            }
+
+            &.view-listings {
+              background-color: #2c3e50;
+              color: white;
+
+              &:hover {
+                background-color: #1a2530;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .join-team-section {
+    background-color: #2c3e50;
+    border-radius: 12px;
+    padding: 60px 40px;
+    margin: 80px 20px 0;
+    text-align: center;
+    color: white;
+
+    @include mobile {
+      padding: 40px 20px;
+      margin: 60px 20px 0;
+    }
+
+    .join-team-content {
+      max-width: 700px;
+      margin: 0 auto;
+
+      h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+
+        @include mobile {
+          font-size: 28px;
+        }
+      }
+
+      p {
+        font-size: 18px;
+        opacity: 0.9;
+        margin-bottom: 30px;
+
+        @include mobile {
+          font-size: 16px;
+        }
+      }
+
+      .join-button {
+        display: inline-block;
+        padding: 14px 30px;
+        background-color: white;
+        color: #2c3e50;
+        border-radius: 6px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+
+        @include mobile {
+          padding: 12px 24px;
+        }
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.9);
+          transform: translateY(-3px);
+        }
+      }
+    }
+  }
+}

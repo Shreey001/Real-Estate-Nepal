@@ -1,0 +1,54 @@
+// Colors
+$primary-color: #3498db;
+$primary-dark: #2980b9;
+$secondary-color: #2c3e50;
+$secondary-dark: #1a2530;
+$accent-color: #2ecc71;
+$accent-dark: #27ae60;
+
+$text-dark: #333;
+$text-medium: #666;
+$text-light: #777;
+
+$background-light: #f8f9fa;
+$background-medium: #f0f0f0;
+$background-white: #ffffff;
+
+$border-color: #ddd;
+$border-light: #e0e0e0;
+
+// Font sizes
+$font-size-small: 14px;
+$font-size-base: 16px;
+$font-size-medium: 18px;
+$font-size-large: 24px;
+$font-size-xlarge: 32px;
+$font-size-xxlarge: 42px;
+
+// Border radius
+$border-radius-small: 6px;
+$border-radius-medium: 8px;
+$border-radius-large: 12px;
+$border-radius-xlarge: 30px;
+
+// Box shadows
+$box-shadow-small: 0 4px 12px rgba(0, 0, 0, 0.08);
+$box-shadow-medium: 0 6px 16px rgba(0, 0, 0, 0.1);
+$box-shadow-large: 0 12px 20px rgba(0, 0, 0, 0.15);
+
+// Spacing
+$spacing-xs: 5px;
+$spacing-sm: 10px;
+$spacing-md: 15px;
+$spacing-lg: 20px;
+$spacing-xl: 30px;
+$spacing-xxl: 40px;
+$spacing-xxxl: 60px;
+
+// Max width for container
+$container-width: 1200px;
+
+// Transitions
+$transition-fast: all 0.2s ease;
+$transition-medium: all 0.3s ease;
+$transition-slow: all 0.5s ease;

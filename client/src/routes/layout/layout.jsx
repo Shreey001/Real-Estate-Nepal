@@ -5,7 +5,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
-function Layout() {
+export function Layout() {
   return (
     <div className="layout">
       <div className="navbar">
@@ -21,10 +21,8 @@ function Layout() {
   );
 }
 
-function RequireAuth() {
+export function RequireAuth() {
   const { currentUser } = useContext(AuthContext);
 
   return !currentUser ? <Navigate to="/login" /> : <Outlet />;
 }
-
-export { Layout, RequireAuth };

@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import { AuthContext } from "./AuthContext";
 export const SocketContext = createContext();
 
-export const SocketContextProvider = ({ children }) => {
+export function SocketContextProvider({ children }) {
   const [socket, setSocket] = useState(null);
   const { currentUser } = useContext(AuthContext);
 
@@ -21,4 +21,4 @@ export const SocketContextProvider = ({ children }) => {
       {children}
     </SocketContext.Provider>
   );
-};
+}

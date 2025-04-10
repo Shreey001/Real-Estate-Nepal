@@ -5,7 +5,7 @@ import Pin from "../pin/Pin";
 
 function Map({ items = [] }) {
   const validItems = Array.isArray(items) ? items : [];
-  const defaultCenter = [27.7172, 85.3240]; // Default to Kathmandu center
+  const defaultCenter = [27.7172, 85.324]; // Default to Kathmandu center
 
   return (
     <MapContainer

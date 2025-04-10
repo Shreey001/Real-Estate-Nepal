@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useNotificationStore } from "../../lib/notificationStore";
 import { AuthContext } from "../../context/AuthContext";
 
-function Navbar() {
+export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const { currentUser } = useContext(AuthContext);
@@ -183,5 +183,3 @@ function Navbar() {
     </header>
   );
 }
-
-export default Navbar;
