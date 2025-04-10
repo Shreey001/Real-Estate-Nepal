@@ -17,16 +17,53 @@
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --navbar-height: 80px;
+  --navbar-height-mobile: 70px;
+}
+
+// Navbar placeholder to prevent content jump
+.navbar-placeholder {
+  height: var(--navbar-height);
+  width: 100%;
+  display: block;
+
+  @include lg {
+    height: var(--navbar-height-mobile);
+  }
 }
 
 .navbar-wrapper {
   background-color: var(--background-light);
   box-shadow: var(--shadow-sm);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
   z-index: 1000;
   width: 100%;
   border-bottom: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+
+  &.scrolled {
+    box-shadow: var(--shadow-md);
+    background-color: rgba(255, 255, 255, 0.98);
+    border-bottom-color: transparent;
+
+    .navbar {
+      height: 65px;
+
+      @include lg {
+        height: 60px;
+      }
+    }
+
+    .navbar-logo img {
+      max-height: 70px;
+
+      @include sm {
+        height: 45px;
+      }
+    }
+  }
 }
 
 .navbar {
@@ -36,10 +73,11 @@
   max-width: 1800px;
   margin: 0 auto;
   padding: 0 20px;
-  height: 80px;
+  height: var(--navbar-height);
+  transition: height 0.3s ease;
 
   @include lg {
-    height: 70px;
+    height: var(--navbar-height-mobile);
     padding: 0 15px;
   }
 }
@@ -58,6 +96,7 @@
   img {
     max-height: 90px;
     width: auto;
+    transition: max-height 0.3s ease;
 
     @include sm {
       height: 50px;
@@ -73,7 +112,7 @@
 
   @include lg {
     position: fixed;
-    top: 70px;
+    top: var(--navbar-height-mobile);
     left: 0;
     right: 0;
     background-color: var(--background-light);
@@ -86,7 +125,7 @@
     pointer-events: none;
     transition: all 0.3s ease;
     height: auto;
-    max-height: calc(100vh - 70px);
+    max-height: calc(100vh - var(--navbar-height-mobile));
     overflow-y: auto;
     gap: 0;
     z-index: 100;
