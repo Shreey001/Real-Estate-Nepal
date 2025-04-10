@@ -12,6 +12,9 @@ function Card({ item, onSaveChange }) {
   const [saved, setSaved] = useState(item.isSaved);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Make sure item.id is always a string
+  const itemId = String(item.id);
+
   // Update saved state when item.isSaved changes
   useEffect(() => {
     setSaved(item.isSaved);
@@ -40,7 +43,7 @@ function Card({ item, onSaveChange }) {
       try {
         setIsLoading(true);
         await apiRequest.post("/users/save", {
-          postId: item.id,
+          postId: itemId, // Use the string version
         });
 
         // Update local state
@@ -49,7 +52,7 @@ function Card({ item, onSaveChange }) {
 
         // Notify parent component about the change
         if (onSaveChange) {
-          onSaveChange(item.id, newSavedState);
+          onSaveChange(itemId, newSavedState);
         }
       } catch (error) {
         console.error(error);
@@ -57,7 +60,7 @@ function Card({ item, onSaveChange }) {
         setIsLoading(false);
       }
     },
-    [currentUser, item.id, navigate, saved, isLoading, onSaveChange]
+    [currentUser, itemId, navigate, saved, isLoading, onSaveChange]
   );
 
   const handleContact = useCallback(
@@ -71,21 +74,21 @@ function Card({ item, onSaveChange }) {
       }
 
       // Navigate to the property page for contact
-      navigate(`/${item.id}`);
+      navigate(`/${itemId}`);
     },
-    [currentUser, item.id, navigate]
+    [currentUser, itemId, navigate]
   );
 
   return (
     <div className="card">
-      <Link to={`/${item.id}`} className="imageContainer">
+      <Link to={`/${itemId}`} className="imageContainer">
         <div className="propertyType">{item.property}</div>
         <div className="propertyStatus">{propertyStatus}</div>
         <img src={item.images[0]} alt={item.title} />
       </Link>
       <div className="textContainer">
         <h2 className="title">
-          <Link to={`/${item.id}`}>{item.title}</Link>
+          <Link to={`/${itemId}`}>{item.title}</Link>
         </h2>
         <p className="address">
           <img src="/pin.png" alt="location" />

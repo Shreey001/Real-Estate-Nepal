@@ -88,8 +88,11 @@ export const getPosts = async (req, res) => {
 export const getPost = async (req, res) => {
   try {
     const { id } = req.params;
+    // Ensure id is a string
+    const postId = String(id);
+
     const post = await prisma.post.findUnique({
-      where: { id },
+      where: { id: postId },
       include: {
         postDetail: true,
         user: {
@@ -114,7 +117,7 @@ export const getPost = async (req, res) => {
         where: {
           userId_postId: {
             userId: userId,
-            postId: id,
+            postId: postId,
           },
         },
       });

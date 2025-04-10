@@ -3,6 +3,7 @@ import "./homePage.scss";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext, useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import FeaturedProperties from "../../components/featuredProperties/FeaturedProperties";
 
 export default function HomePage() {
   const { currentUser } = useContext(AuthContext);
@@ -326,6 +327,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Featured Properties Section */}
+      <FeaturedProperties />
 
       {/* Testimonials Section */}
       <section className="testimonials-section">

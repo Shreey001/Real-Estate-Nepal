@@ -100,12 +100,15 @@ export const savePost = async (req, res) => {
   const { postId } = req.body;
   const tokenUserId = req.userId;
 
+  // Ensure postId is treated as a string
+  const postIdString = String(postId);
+
   try {
     const savedPost = await prisma.savedPost.findUnique({
       where: {
         userId_postId: {
           userId: tokenUserId,
-          postId,
+          postId: postIdString,
         },
       },
     });
@@ -117,7 +120,7 @@ export const savePost = async (req, res) => {
       res.status(200).json({ message: "Post removed from saved" });
     } else {
       await prisma.savedPost.create({
-        data: { userId: tokenUserId, postId },
+        data: { userId: tokenUserId, postId: postIdString },
       });
       res.status(200).json({ message: "Post saved" });
     }
