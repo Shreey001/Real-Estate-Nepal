@@ -1,95 +1,250 @@
 @import "../../responsive.scss";
 
 .searchBar {
-  .type {
+  position: relative;
+  z-index: 10;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  transition: background 0.3s ease;
+
+  &.all-active {
+    .type-selector button.active {
+      background: linear-gradient(to bottom, #3b82f6, #1d4ed8);
+      color: white;
+    }
+
+    .search-button button {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+
+      &:hover {
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+      }
+    }
+  }
+
+  &.buy-active {
+    .type-selector button.active {
+      background: linear-gradient(to bottom, #10b981, #047857);
+      color: white;
+    }
+
+    .search-button button {
+      background: linear-gradient(135deg, #10b981, #047857);
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+
+      &:hover {
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+      }
+    }
+  }
+
+  &.rent-active {
+    .type-selector button.active {
+      background: linear-gradient(to bottom, #fbbf24, #d97706);
+      color: white;
+    }
+
+    .search-button button {
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+
+      &:hover {
+        box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+      }
+    }
+  }
+
+  .search-container {
+    width: 100%;
+  }
+
+  .type-selector {
+    display: flex;
+    position: absolute;
+    top: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 360px;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+
+    @include md {
+      width: 330px;
+      top: -40px;
+    }
+
+    @include sm {
+      width: 300px;
+      top: -38px;
+
+      button {
+        font-size: 13px;
+        padding: 10px 0;
+      }
+    }
+
     button {
-      padding: 16px 36px;
-      border: 1px solid #999;
-      border-bottom: none;
+      flex: 1;
+      padding: 12px 0;
+      border: none;
       cursor: pointer;
-      background-color: white;
-      text-transform: capitalize;
+      background: rgba(0, 0, 0, 0.3);
+      color: white;
+      font-weight: 600;
+      letter-spacing: 1px;
+      font-size: 16px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      position: relative;
 
       &.active {
-        background-color: black;
-        color: white;
+        font-weight: 700;
+      }
+
+      &:hover:not(.active) {
+        background: rgba(0, 0, 0, 0.4);
       }
 
       &:first-child {
-        border-top-left-radius: 5px;
-        border-right: none;
+        border-top-left-radius: 8px;
       }
+
       &:last-child {
-        border-top-right-radius: 5px;
-        border-left: none;
+        border-top-right-radius: 8px;
       }
     }
   }
 
   form {
-    border: 1px solid #999;
-    display: flex;
-    justify-content: space-between;
-    height: 64px;
-    gap: 5px;
+    padding: 20px;
 
     @include sm {
-      flex-direction: column;
-      border: none;
+      padding: 15px;
     }
 
-    input {
-      border: none;
-      padding: 0px 10px;
-      width: 200px;
-
-      @include lg {
-        padding: 0px 5px;
-
-        &:nth-child(2),
-        &:nth-child(3) {
-          width: 140px;
-        }
-      }
-      @include md {
-        width: 200px;
-        &:nth-child(2),
-        &:nth-child(3) {
-          width: 200px;
-        }
-      }
-
-      @include sm {
-        width: auto;
-        &:nth-child(2),
-        &:nth-child(3) {
-          width: auto;
-        }
-        padding: 20px;
-        border: 1px solid #999;
-      }
-    }
-    a {
-      flex: 1;
-      background-color: #fece51;
-
+    .input-group {
       display: flex;
       align-items: center;
-      justify-content: center;
-    }
-    button {
-      border: none;
-      cursor: pointer;
-      background-color: #fece51;
-      flex: 1;
+      gap: 15px;
+      width: 100%;
 
-      @include sm {
-        padding: 10px;
+      @include md {
+        flex-wrap: wrap;
+        gap: 10px;
       }
 
-      img {
-        width: 24px;
-        height: 24px;
+      @include sm {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .input-with-icon {
+        position: relative;
+        flex: 2;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        overflow: hidden;
+
+        @include sm {
+          width: 100%;
+        }
+
+        i {
+          position: absolute;
+          left: 15px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #666;
+          font-size: 16px;
+        }
+
+        input {
+          width: 100%;
+          border: none;
+          padding: 16px 14px 16px 45px;
+          background: transparent;
+          font-size: 15px;
+          color: #333;
+
+          &:focus {
+            outline: none;
+          }
+
+          &::placeholder {
+            color: #999;
+          }
+        }
+      }
+
+      .price-inputs {
+        display: flex;
+        flex: 3;
+        gap: 15px;
+
+        @include md {
+          flex: 1 0 100%;
+        }
+
+        @include sm {
+          width: 100%;
+          gap: 10px;
+        }
+
+        .input-with-icon {
+          flex: 1;
+
+          @include sm {
+            flex-basis: 50%;
+          }
+        }
+      }
+
+      .search-button {
+        flex: 1;
+        text-decoration: none;
+
+        @include md {
+          flex: 1 0 auto;
+        }
+
+        @include sm {
+          width: 100%;
+        }
+
+        button {
+          width: 100%;
+          height: 100%;
+          padding: 16px;
+          border: none;
+          border-radius: 8px;
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          transition: all 0.3s ease;
+          font-size: 15px;
+
+          &:hover {
+            transform: translateY(-2px);
+          }
+
+          i {
+            font-size: 16px;
+          }
+        }
       }
     }
   }

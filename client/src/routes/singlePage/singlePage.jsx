@@ -76,7 +76,7 @@ function SinglePage() {
                     <img src="/pin.png" alt="Location" />
                     <span>{post.address}</span>
                   </div>
-                  <div className="price">${formatPrice(post.price)}</div>
+                  <div className="price">Rs.{formatPrice(post.price)}</div>
                 </div>
                 <div className="user">
                   <img

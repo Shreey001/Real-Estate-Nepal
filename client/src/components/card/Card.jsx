@@ -93,7 +93,7 @@ function Card({ item, onSaveChange }) {
             {item.address}, {item.city}
           </span>
         </p>
-        <p className="price">${formatPrice(item.price)}</p>
+        <p className="price">Rs.{formatPrice(item.price)}</p>
         <div className="bottom">
           <div className="features">
             <div className="feature">

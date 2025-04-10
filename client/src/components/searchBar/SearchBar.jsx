@@ -1,11 +1,11 @@
 import { useState } from "react";
 import "./searchBar.scss";
 import { Link } from "react-router-dom";
-const types = ["buy", "rent"];
+const types = ["all", "buy", "rent"];
 
 function SearchBar() {
   const [query, setQuery] = useState({
-    type: "buy",
+    type: "all",
     searchTerm: "",
     minPrice: "",
     maxPrice: "",
@@ -22,8 +22,8 @@ function SearchBar() {
   const getSearchUrl = () => {
     const params = new URLSearchParams();
 
-    // Set type parameter for buy/rent
-    if (query.type) {
+    // Set type parameter for buy/rent/all
+    if (query.type && query.type !== "all") {
       params.append("type", query.type);
     }
 
@@ -39,49 +39,81 @@ function SearchBar() {
     // Function kept for potential future functionality
   };
 
+  const getSearchBarClass = () => {
+    let classes = "searchBar";
+    if (query.type === "buy") {
+      classes += " buy-active";
+    } else if (query.type === "rent") {
+      classes += " rent-active";
+    } else if (query.type === "all") {
+      classes += " all-active";
+    }
+    return classes;
+  };
+
   return (
-    <div className="searchBar">
-      <div className="type">
-        {types.map((type) => (
-          <button
-            key={type}
-            onClick={() => switchType(type)}
-            className={query.type === type ? "active" : ""}
-          >
-            {type}
-          </button>
-        ))}
+    <div className={getSearchBarClass()}>
+      <div className="search-container">
+        <div className="type-selector">
+          {types.map((type) => (
+            <button
+              key={type}
+              onClick={() => switchType(type)}
+              className={query.type === type ? "active" : ""}
+            >
+              {type.charAt(0).toUpperCase() + type.slice(1)}
+            </button>
+          ))}
+        </div>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <div className="input-group">
+            <div className="input-with-icon">
+              <i className="fas fa-map-marker-alt"></i>
+              <input
+                type="text"
+                name="searchTerm"
+                value={query.searchTerm}
+                placeholder="Enter city or location"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="price-inputs">
+              <div className="input-with-icon">
+                <i className="fas fa-rupee-sign"></i>
+                <input
+                  type="number"
+                  name="minPrice"
+                  min={0}
+                  value={query.minPrice}
+                  placeholder="Min Price"
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="input-with-icon">
+                <i className="fas fa-rupee-sign"></i>
+                <input
+                  type="number"
+                  name="maxPrice"
+                  min={0}
+                  value={query.maxPrice}
+                  placeholder="Max Price"
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+            <Link
+              to={getSearchUrl()}
+              onClick={handleSearch}
+              className="search-button"
+            >
+              <button type="button">
+                <i className="fas fa-search"></i>
+                <span>Search</span>
+              </button>
+            </Link>
+          </div>
+        </form>
       </div>
-      <form onSubmit={(e) => e.preventDefault()}>
-        <input
-          type="text"
-          name="searchTerm"
-          value={query.searchTerm}
-          placeholder="Enter city or location"
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="minPrice"
-          min={0}
-          value={query.minPrice}
-          placeholder="Min Price (0)"
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="maxPrice"
-          min={0}
-          value={query.maxPrice}
-          placeholder="Max Price (50000000)"
-          onChange={handleChange}
-        />
-        <Link to={getSearchUrl()} onClick={handleSearch}>
-          <button type="button">
-            <img src="/search.png" alt="Search" />
-          </button>
-        </Link>
-      </form>
     </div>
   );
 }

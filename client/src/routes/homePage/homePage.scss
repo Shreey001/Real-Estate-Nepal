@@ -105,8 +105,17 @@
         }
 
         .search-container {
-          margin: 15px 0;
+          margin: 40px 0 25px;
           width: 100%;
+          position: relative;
+          z-index: 5;
+          max-width: 100%;
+          display: flex;
+          justify-content: center;
+
+          @include sm {
+            margin-bottom: 30px;
+          }
         }
 
         .boxes {

@@ -20,7 +20,7 @@ function Pin({ item }) {
     iconUrl: "/blue-pin.svg",
     iconSize: [24, 36],
     iconAnchor: [12, 36],
-    popupAnchor: [0, -36]
+    popupAnchor: [0, -36],
   });
 
   return (
@@ -38,7 +38,7 @@ function Pin({ item }) {
                 }}
               />
               <div className="price-tag">
-                <span className="currency">$</span>
+                <span className="currency">Rs.</span>
                 {formatPrice(item.price)}
               </div>
             </div>

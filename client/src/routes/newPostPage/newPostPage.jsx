@@ -133,7 +133,7 @@ function NewPostPage() {
                 </div>
 
                 <div className="item">
-                  <label htmlFor="price">Price ($)</label>
+                  <label htmlFor="price">Price (Rs)</label>
                   <input
                     id="price"
                     name="price"
@@ -361,7 +361,7 @@ function NewPostPage() {
                 </div>
 
                 <div className="item">
-                  <label htmlFor="income">Min Income Required ($)</label>
+                  <label htmlFor="income">Min Income Required (Rs)</label>
                   <input
                     id="income"
                     name="income"
