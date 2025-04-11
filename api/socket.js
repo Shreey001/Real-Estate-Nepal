@@ -11,10 +11,7 @@ const SocketHandler = (req, res) => {
     path: "/api/socket",
     addTrailingSlash: false,
     cors: {
-      origin: [
-        "https://real-estate-six-lyart-82.vercel.app",
-        "http://localhost:5173",
-      ],
+      origin: ["https://real-estate-nepal.vercel.app", "http://localhost:5173"],
       methods: ["GET", "POST"],
       credentials: true,
     },

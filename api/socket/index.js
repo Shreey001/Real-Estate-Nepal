@@ -10,7 +10,7 @@ export default function SocketHandler(req, res) {
       addTrailingSlash: false,
       cors: {
         origin: [
-          "https://real-estate-six-lyart-82.vercel.app",
+          "https://real-estate-nepal.vercel.app",
           "http://localhost:5173",
         ],
         methods: ["GET", "POST"],
