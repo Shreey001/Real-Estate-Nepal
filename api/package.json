@@ -2,20 +2,14 @@
   "name": "api",
   "module": "index.ts",
   "type": "module",
-  "devDependencies": {
-    "@types/bun": "latest",
-    "prisma": "^5.10.2"
-  },
   "scripts": {
     "dev": "nodemon app.js",
     "ninja": "console-ninja node --watch app.js",
-    "start": "bun app.js",
+    "start": "node app.js",
     "generate": "npx prisma generate",
+    "postinstall": "prisma generate",
     "push": "npx prisma db push",
     "studio": "npx prisma studio"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",
@@ -25,6 +19,13 @@
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "prisma": "^5.10.2"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
   }
 }
