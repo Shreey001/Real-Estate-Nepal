@@ -10,111 +10,53 @@ import messageRoutes from "./routes/message.route.js";
 
 const app = express();
 
-// Basic request logging
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
-  next();
+// CORS configuration
+app.use(
+  cors({
+    origin: [
+      "https://real-estate-six-lyart-82.vercel.app",
+      "http://localhost:5173",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// Health check
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-// Error logging
-const logError = (err) => {
-  console.error("Error details:", {
-    message: err.message,
-    stack: err.stack,
-    timestamp: new Date().toISOString(),
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/test", testRoutes);
+app.use("/api/chats", chatRoutes);
+app.use("/api/messages", messageRoutes);
+
+// Error handling
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({
+    error: "Internal Server Error",
+    message:
+      process.env.NODE_ENV === "development"
+        ? err.message
+        : "Something went wrong",
   });
-};
+});
 
-try {
-  // Configure CORS to accept requests from both local and production origins
-  const allowedOrigins = [
-    process.env.CLIENT_URL,
-    "http://localhost:5173",
-    "https://real-estate-six-lyart-82.vercel.app",
-  ];
-
-  app.use(
-    cors({
-      origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps, curl requests)
-        if (!origin) return callback(null, true);
-
-        if (allowedOrigins.indexOf(origin) !== -1) {
-          callback(null, true);
-        } else {
-          callback(new Error("Not allowed by CORS"));
-        }
-      },
-      credentials: true,
-    })
-  );
-
-  // Middleware
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-  app.use(cookieParser());
-
-  // Root route for testing
-  app.get("/", (req, res) => {
-    res.status(200).json({
-      message: "Real Estate API is running",
-      env: process.env.NODE_ENV,
-      timestamp: new Date().toISOString(),
-    });
-  });
-
-  // Health check endpoint
-  app.get("/health", (req, res) => {
-    res.status(200).json({
-      status: "ok",
-      timestamp: new Date().toISOString(),
-    });
-  });
-
-  // API Routes
-  app.use("/api/auth", authRoutes);
-  app.use("/api/users", userRoutes);
-  app.use("/api/posts", postRoutes);
-  app.use("/api/test", testRoutes);
-  app.use("/api/chats", chatRoutes);
-  app.use("/api/messages", messageRoutes);
-
-  // Error handling middleware
-  app.use((err, req, res, next) => {
-    logError(err);
-    res.status(500).json({
-      message: "Something broke!",
-      error:
-        process.env.NODE_ENV === "development"
-          ? err.message
-          : "Internal server error",
-      timestamp: new Date().toISOString(),
-    });
-  });
-
-  // 404 handler - must be after all other routes
-  app.use((req, res) => {
-    console.log(`404 - Route not found: ${req.path}`);
-    res.status(404).json({
-      message: "Route not found",
-      path: req.path,
-      timestamp: new Date().toISOString(),
-    });
-  });
-} catch (error) {
-  logError(error);
-  // Add a fallback error route
-  app.use((req, res) => {
-    res.status(500).json({
-      message: "Server initialization failed",
-      error:
-        process.env.NODE_ENV === "development"
-          ? error.message
-          : "Internal server error",
-      timestamp: new Date().toISOString(),
-    });
-  });
-}
+// Handle 404
+app.use((req, res) => {
+  res.status(404).json({ error: "Not Found" });
+});
 
 // For local development
 if (process.env.NODE_ENV !== "production") {
