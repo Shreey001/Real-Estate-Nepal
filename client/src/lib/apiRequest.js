@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiRequest = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:4000/api",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:4000",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -15,10 +15,7 @@ apiRequest.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    // Ensure the URL has /api prefix
-    if (!config.url.startsWith("/api") && !config.url.startsWith("http")) {
-      config.url = `/api${config.url}`;
-    }
+    // Remove duplicate /api prefix handling since it's already in the routes
     return config;
   },
   (error) => {

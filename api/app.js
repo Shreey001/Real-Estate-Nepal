@@ -37,8 +37,9 @@ app.use(
       "Cookie",
       "Origin",
       "Accept",
+      "X-Requested-With",
     ],
-    exposedHeaders: ["set-cookie"],
+    exposedHeaders: ["Set-Cookie"],
     optionsSuccessStatus: 200,
   })
 );
