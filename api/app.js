@@ -38,8 +38,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Root route
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Real Estate API is running" });
+});
+
 // Health check endpoint
-app.get("/api/health", (req, res) => {
+app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
@@ -60,6 +65,14 @@ app.use((err, req, res, next) => {
       process.env.NODE_ENV === "development"
         ? err.message
         : "Internal server error",
+  });
+});
+
+// 404 handler - must be after all other routes
+app.use((req, res) => {
+  res.status(404).json({
+    message: "Route not found",
+    path: req.path,
   });
 });
 
