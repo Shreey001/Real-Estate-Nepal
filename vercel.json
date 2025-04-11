@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.js",
+      "src": "api/**/*.js",
       "use": "@vercel/node",
       "config": {
         "includeFiles": ["api/prisma/**"]
@@ -11,7 +11,11 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/socket",
+      "dest": "api/socket/index.js"
+    },
+    {
+      "src": "/api/(.*)",
       "dest": "api/index.js"
     }
   ]
