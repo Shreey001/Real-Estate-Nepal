@@ -1,5 +1,9 @@
 {
   "dependencies": {
     "react-icons": "^5.5.0"
+  },
+  "scripts": {
+    "vercel-build": "prisma generate && prisma migrate deploy",
+    "postinstall": "prisma generate"
   }
 }
