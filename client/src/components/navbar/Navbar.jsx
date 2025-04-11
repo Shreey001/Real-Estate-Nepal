@@ -1,15 +1,17 @@
 import { useState, useContext, useEffect, useRef } from "react";
 import "./navbar.scss";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useNotificationStore } from "../../lib/notificationStore";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
+
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [scrolled, setScrolled] = useState(false);
-  const { currentUser, updateUser } = useContext(AuthContext);
+  const { currentUser, updateUser, logout } = useContext(AuthContext);
   const location = useLocation();
+  const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
   const fetch = useNotificationStore((state) => state.fetch);
@@ -60,10 +62,10 @@ export default function Navbar() {
   const toggleDropdown = (dropdown) => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
+
   const handleLogout = async () => {
     try {
-      await apiRequest.post("/auth/logout");
-      updateUser(null);
+      await logout();
       navigate("/login");
     } catch (error) {
       console.log(error);
@@ -128,6 +130,18 @@ export default function Navbar() {
                 About
               </Link>
             </div>
+
+            {/* Mobile-only login/signup buttons */}
+            {!currentUser && (
+              <div className="mobile-auth-buttons">
+                <Link to="/login" className="login-button">
+                  Log In
+                </Link>
+                <Link to="/register" className="signup-button">
+                  Sign Up
+                </Link>
+              </div>
+            )}
           </div>
 
           <div className="navbar-actions">

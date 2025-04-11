@@ -217,6 +217,53 @@
       }
     }
   }
+
+  // Add mobile auth buttons styling
+  .mobile-auth-buttons {
+    display: none; // Hidden on desktop
+    width: 100%;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+
+    @include lg {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 0 15px 15px;
+    }
+
+    a {
+      display: block;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 15px;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s;
+
+      &.login-button {
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+        background-color: transparent;
+
+        &:hover {
+          background-color: var(--primary-light);
+        }
+      }
+
+      &.signup-button {
+        color: white;
+        background-color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+
+        &:hover {
+          background-color: var(--primary-dark);
+        }
+      }
+    }
+  }
 }
 
 .navbar-actions {
