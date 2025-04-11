@@ -9,9 +9,25 @@ import chatRoutes from "./routes/chat.route.js";
 import messageRoutes from "./routes/message.route.js";
 const app = express();
 
+// Configure CORS to accept requests from both local and production origins
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173", // Local development frontend
+  "https://real-estate-app-frontend.vercel.app", // Vercel deployed frontend
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl requests)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -25,6 +41,12 @@ app.use("/api/test", testRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/messages", messageRoutes);
 
-app.listen(4000, () => {
-  console.log("Server is running on port 4000 ");
-});
+// For Vercel deployment, we export the configured app
+export default app;
+
+// Only start the server if not being deployed to Vercel
+if (process.env.NODE_ENV !== "production") {
+  app.listen(4000, () => {
+    console.log("Server is running on port 4000 ");
+  });
+}
