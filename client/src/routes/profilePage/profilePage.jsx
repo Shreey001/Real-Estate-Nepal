@@ -175,19 +175,17 @@ function ProfilePage() {
       >
         <div className="chatHeader">
           <h2>Messages</h2>
-          {windowWidth <= 1200 && (
-            <button
-              className="closeChat"
-              onClick={() => {
-                setChatOpen(false);
-                setActiveTab("myProperties");
-                // Remove the section parameter from URL
-                navigate("/profile", { replace: true });
-              }}
-            >
-              ×
-            </button>
-          )}
+          <button
+            className="closeChat"
+            onClick={() => {
+              setChatOpen(false);
+              setActiveTab("myProperties");
+              // Remove the section parameter from URL
+              navigate("/profile", { replace: true });
+            }}
+          >
+            ×
+          </button>
         </div>
         <div className="chatContainer">
           <Suspense

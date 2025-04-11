@@ -108,14 +108,47 @@
     .chatPanel {
       width: 100%;
       right: -100%;
+      z-index: 1000;
 
       &.open {
         right: 0;
+      }
+
+      .chatHeader {
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .closeChat {
+          display: block;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: #f0f2f5;
+          border: none;
+          font-size: 24px;
+          line-height: 1;
+          cursor: pointer;
+          color: #444;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+
+          &:hover {
+            background: #e4e6eb;
+          }
+        }
       }
     }
 
     .mobileActions {
       display: flex;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 99;
     }
   }
 
@@ -292,76 +325,14 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    transition: all 0.3s ease;
-
-    &.highlighted {
-      box-shadow: 0 5px 25px rgba(24, 119, 242, 0.25);
-      border: 2px solid transparent;
-      border-radius: 16px;
-      position: relative;
-
-      &::before {
-        content: "";
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        background: linear-gradient(135deg, #1877f2, #4a90e2, #6cace8, #1877f2);
-        border-radius: 18px;
-        z-index: -1;
-        filter: blur(6px);
-        opacity: 0.7;
-        animation: borderGlow 3s infinite alternate;
-      }
-
-      @keyframes borderGlow {
-        0% {
-          filter: blur(6px);
-          opacity: 0.6;
-        }
-        100% {
-          filter: blur(10px);
-          opacity: 0.8;
-        }
-      }
-
-      .chatHeader {
-        background-color: #f0f7ff;
-        border-radius: 14px 14px 0 0;
-
-        h2 {
-          color: #1877f2;
-          position: relative;
-
-          &::after {
-            content: "";
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 30px;
-            height: 3px;
-            background-color: #1877f2;
-            border-radius: 3px;
-          }
-        }
-      }
-    }
-
-    .closeChat {
-      display: none; /* Hide close button in desktop mode */
-
-      @media (max-width: 1200px) {
-        display: flex; /* Show close button in tablet/mobile mode */
-      }
-    }
+    overflow: hidden;
 
     .chatHeader {
       padding: 20px;
       border-bottom: 1px solid #f0f2f5;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
 
       h2 {
         font-size: 18px;
@@ -371,19 +342,27 @@
       }
 
       .closeChat {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background-color: #f0f2f5;
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 18px;
+        display: none; /* Hidden by default, shown in mobile */
 
-        &:hover {
-          background-color: #e4e6eb;
+        @media (max-width: 1200px) {
+          display: block;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: #f0f2f5;
+          border: none;
+          font-size: 24px;
+          line-height: 1;
+          cursor: pointer;
+          color: #444;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+
+          &:hover {
+            background: #e4e6eb;
+          }
         }
       }
     }
@@ -408,41 +387,55 @@
   /* Mobile Actions */
   .mobileActions {
     display: none;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 998;
+
+    @media (max-width: 1200px) {
+      display: flex;
+      justify-content: center;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 99;
+    }
 
     .mobileToggleChat {
-      padding: 12px 18px;
       background-color: #1877f2;
       color: white;
       border: none;
-      border-radius: 25px;
+      border-radius: 30px;
+      padding: 12px 24px;
       font-weight: 600;
+      font-size: 15px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
         background-color: darken(#1877f2, 5%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(24, 119, 242, 0.4);
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 8px rgba(24, 119, 242, 0.2);
       }
 
       &.highlighted {
-        background-color: #0a56c7;
-        box-shadow: 0 4px 20px rgba(24, 119, 242, 0.5);
-        animation: pulse 2s infinite;
+        animation: pulse 1.5s infinite;
+      }
 
-        @keyframes pulse {
-          0% {
-            box-shadow: 0 0 0 0 rgba(24, 119, 242, 0.7);
-          }
-          70% {
-            box-shadow: 0 0 0 15px rgba(24, 119, 242, 0);
-          }
-          100% {
-            box-shadow: 0 0 0 0 rgba(24, 119, 242, 0);
-          }
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(24, 119, 242, 0.6);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(24, 119, 242, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(24, 119, 242, 0);
         }
       }
     }

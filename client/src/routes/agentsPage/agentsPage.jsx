@@ -184,7 +184,7 @@ function AgentsPage() {
 
       <div className="agents-container">
         <div className="agents-header">
-          <h2>Our Expert Team</h2>
+          <h2>Our Expert Agents</h2>
           <p className="results-count">
             {filteredAgents.length} agent
             {filteredAgents.length !== 1 ? "s" : ""} found

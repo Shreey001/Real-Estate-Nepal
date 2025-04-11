@@ -1,6 +1,17 @@
+@import "../../responsive.scss";
+
 .profileUpdatePage {
   height: 100%;
   display: flex;
+  min-height: calc(100vh - 100px);
+  width: 100%;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+    padding: 20px;
+    height: auto;
+  }
 
   .loading {
     display: flex;
@@ -12,9 +23,25 @@
   }
 
   .error {
-    color: red;
+    color: #e74c3c;
     margin-top: 10px;
     font-size: 14px;
+    text-align: center;
+    padding: 10px;
+    background-color: rgba(231, 76, 60, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid #e74c3c;
+  }
+
+  .success {
+    color: #27ae60;
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px;
+    background-color: rgba(39, 174, 96, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid #27ae60;
   }
 
   .formContainer {
@@ -22,12 +49,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 30px 20px;
+
+    @media (max-width: 768px) {
+      padding: 20px 0;
+    }
+
     form {
       display: flex;
       flex-direction: column;
       gap: 20px;
       width: 100%;
       max-width: 400px;
+
+      h1 {
+        font-size: 24px;
+        margin: 0;
+        color: #333;
+        text-align: center;
+
+        @media (max-width: 768px) {
+          margin-top: 20px;
+        }
+      }
 
       .item {
         display: flex;
@@ -36,38 +80,84 @@
 
         label {
           font-weight: 500;
+          color: #555;
         }
 
         input {
           padding: 15px;
-          border-radius: 5px;
+          border-radius: 8px;
           border: 1px solid #ddd;
           font-size: 16px;
+          background-color: #f9f9f9;
+          transition: all 0.2s ease;
 
           &:focus {
             outline: none;
             border-color: #fece51;
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(254, 206, 81, 0.2);
           }
         }
       }
 
-      button {
-        padding: 15px;
-        border-radius: 5px;
-        border: none;
-        background-color: #fece51;
-        color: #333;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
+      .formActions {
+        display: flex;
+        gap: 15px;
+        margin-top: 10px;
 
-        &:hover {
-          background-color: darken(#fece51, 10%);
+        @media (max-width: 768px) {
+          flex-direction: column-reverse;
+          gap: 10px;
         }
 
-        &:disabled {
-          background-color: #ccc;
-          cursor: not-allowed;
+        .cancelButton {
+          flex: 1;
+          padding: 15px;
+          border-radius: 8px;
+          border: 1px solid #ddd;
+          background-color: #f9f9f9;
+          color: #555;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-align: center;
+          text-decoration: none;
+          font-size: 15px;
+
+          &:hover {
+            background-color: #f0f0f0;
+          }
+        }
+
+        button {
+          flex: 2;
+          padding: 15px;
+          border-radius: 8px;
+          border: none;
+          background-color: #fece51;
+          color: #333;
+          font-weight: bold;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-size: 15px;
+
+          &:hover {
+            background-color: darken(#fece51, 10%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+
+          &:disabled {
+            background-color: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+          }
         }
       }
     }
@@ -81,15 +171,39 @@
     gap: 20px;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 30px 20px;
+
+    @media (max-width: 768px) {
+      padding: 30px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+      background-color: #fff8f5;
+    }
 
     .avatar {
-      width: 200px;
-      height: 200px;
+      width: 160px;
+      height: 160px;
       border-radius: 50%;
       object-fit: cover;
       border: 3px solid white;
       box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+
+      @media (max-width: 768px) {
+        width: 120px;
+        height: 120px;
+      }
+    }
+
+    .uploadHint {
+      color: #777;
+      font-size: 14px;
+      text-align: center;
+      margin: 0;
+
+      @media (max-width: 768px) {
+        font-size: 13px;
+      }
     }
   }
 }

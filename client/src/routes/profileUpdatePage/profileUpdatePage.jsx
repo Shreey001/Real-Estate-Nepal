@@ -1,7 +1,7 @@
 import "./profileUpdatePage.scss";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import apiRequest from "../../lib/apiRequest";
 import UploadWidgets from "../../components/uploadWidgets/UploadWidgets";
 
@@ -10,6 +10,7 @@ function ProfileUpdatePage() {
   const [error, setError] = useState(null);
   const [avatar, setAvatar] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   // Set the avatar when the component mounts to ensure currentUser is available
@@ -23,6 +24,7 @@ function ProfileUpdatePage() {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+    setSuccessMessage("");
 
     if (!currentUser || !currentUser.id) {
       setError("User session expired. Please login again.");
@@ -59,7 +61,9 @@ function ProfileUpdatePage() {
       };
       updateUser(updatedUser);
 
-      navigate("/profile");
+      setSuccessMessage("Profile updated successfully!");
+      // Navigate after a short delay to show the success message
+      setTimeout(() => navigate("/profile"), 1500);
     } catch (error) {
       setError(
         error.response?.data?.message || "An error occurred during update"
@@ -79,6 +83,7 @@ function ProfileUpdatePage() {
       <div className="formContainer">
         <form onSubmit={handleSubmit}>
           <h1>Update Profile</h1>
+
           <div className="item">
             <label htmlFor="username">Username</label>
             <input
@@ -108,10 +113,18 @@ function ProfileUpdatePage() {
               placeholder="Leave empty to keep current password"
             />
           </div>
-          <button type="submit" disabled={isLoading}>
-            {isLoading ? "Updating..." : "Update"}
-          </button>
+
+          <div className="formActions">
+            <Link to="/profile" className="cancelButton">
+              Cancel
+            </Link>
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? "Updating..." : "Update Profile"}
+            </button>
+          </div>
+
           {error && <p className="error">{error}</p>}
+          {successMessage && <p className="success">{successMessage}</p>}
         </form>
       </div>
       <div className="sideContainer">
@@ -130,6 +143,7 @@ function ProfileUpdatePage() {
           }}
           setState={setAvatar}
         />
+        <p className="uploadHint">Tap to upload a new profile picture</p>
       </div>
     </div>
   );
