@@ -44,25 +44,36 @@ app.use("/api/messages", messageRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({
-    error: "Internal Server Error",
-    message:
-      process.env.NODE_ENV === "development"
-        ? err.message
-        : "Something went wrong",
-  });
+  console.error("Express error:", err);
+  if (!res.headersSent) {
+    res.status(500).json({
+      error: "Internal Server Error",
+      message:
+        process.env.NODE_ENV === "development"
+          ? err.message
+          : "Something went wrong",
+      timestamp: new Date().toISOString(),
+    });
+  }
 });
 
 // Handle 404
 app.use((req, res) => {
-  res.status(404).json({ error: "Not Found" });
+  if (!res.headersSent) {
+    res.status(404).json({
+      error: "Not Found",
+      path: req.path,
+      method: req.method,
+      timestamp: new Date().toISOString(),
+    });
+  }
 });
 
-// For local development
+// For local development only
 if (process.env.NODE_ENV !== "production") {
-  app.listen(4000, () => {
-    console.log("Server is running on port 4000");
+  const port = process.env.PORT || 4000;
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
   });
 }
 
