@@ -8,6 +8,23 @@ const apiRequest = axios.create({
   },
 });
 
+// Flag to prevent multiple refresh attempts at once
+let isRefreshing = false;
+// Store pending requests
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  failedQueue = [];
+};
+
 // Request interceptor
 apiRequest.interceptors.request.use(
   (config) => {
@@ -25,35 +42,58 @@ apiRequest.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // If the error is 401 and we haven't retried yet
+    // Handle 401 errors and token refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        // If already refreshing, queue this request
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            return apiRequest(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
-        // Try to refresh the token (this uses the HttpOnly cookie)
-        await apiRequest.post("/auth/refresh");
+        // Only attempt a refresh once, then redirect to login
+        const response = await apiRequest.post("/auth/refresh");
 
-        // If we get here, the token was refreshed successfully
+        // Success - mark refreshing as complete
+        isRefreshing = false;
+
+        // Process queue with new token
+        processQueue(null, response.data.accessToken);
+
         // Retry the original request
         return apiRequest(originalRequest);
       } catch (refreshError) {
-        // If refresh fails, handle gracefully
-        console.error("Failed to refresh authentication", refreshError);
+        // Refresh failed - reset the flag and clear queue
+        isRefreshing = false;
+        processQueue(refreshError, null);
 
-        // Clear user data from localStorage but don't redirect automatically
-        // This prevents redirect loops
+        // Clear user data
         localStorage.removeItem("user");
 
-        // Only redirect if not already on login page
+        // Only redirect if not already on login or register page
         const currentPath = window.location.pathname;
         if (currentPath !== "/login" && currentPath !== "/register") {
-          window.location.href = "/login";
+          // Redirect with a slight delay to avoid redirect loops
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 100);
         }
 
         return Promise.reject(refreshError);
       }
     }
 
+    // For all other errors, just reject the promise
     return Promise.reject(error);
   }
 );

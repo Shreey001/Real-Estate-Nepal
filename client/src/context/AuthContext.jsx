@@ -11,14 +11,22 @@ export function AuthContextProvider({ children }) {
 
   useEffect(() => {
     const validateToken = async () => {
-      try {
-        // Try to validate with cookie-based auth first
-        const response = await apiRequest.get("/auth/validate");
-        setCurrentUser(response.data.user);
+      // Only validate if we have a user in localStorage
+      if (!localStorage.getItem("user")) {
+        setLoading(false);
+        return;
+      }
 
-        // If we get here without error, store the user
+      try {
+        const response = await apiRequest.get("/auth/validate");
+        // Update user data if validation succeeds
         if (response.data.user) {
+          setCurrentUser(response.data.user);
           localStorage.setItem("user", JSON.stringify(response.data.user));
+        } else {
+          // Clear user data if validation returns invalid data
+          localStorage.removeItem("user");
+          setCurrentUser(null);
         }
       } catch (error) {
         console.error("Token validation failed:", error);
@@ -30,12 +38,7 @@ export function AuthContextProvider({ children }) {
       }
     };
 
-    // Only validate if we think we have a user
-    if (localStorage.getItem("user")) {
-      validateToken();
-    } else {
-      setLoading(false);
-    }
+    validateToken();
   }, []);
 
   const updateUser = (data) => {
@@ -60,14 +63,12 @@ export function AuthContextProvider({ children }) {
       // Clear cookies manually as well
       document.cookie =
         "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-      // Clear domain-specific cookies for Vercel
-      if (window.location.hostname.includes(".vercel.app")) {
-        document.cookie =
-          "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.vercel.app;";
-        document.cookie =
-          "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=vercel.app;";
-      }
+      document.cookie =
+        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.vercel.app;";
+      document.cookie =
+        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=vercel.app;";
+      document.cookie =
+        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; samesite=none;";
     }
   };
 

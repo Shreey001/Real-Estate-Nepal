@@ -14,6 +14,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
     setIsLoading(true);
     const formData = new FormData(e.target);
 
@@ -26,9 +27,13 @@ function Login() {
         password,
       });
 
-      updateUser(res.data.user);
-
-      navigate("/");
+      // On successful login, update user in context
+      if (res.data && res.data.user) {
+        updateUser(res.data.user);
+        navigate("/");
+      } else {
+        setError({ message: "Invalid response from server" });
+      }
     } catch (error) {
       console.error("Login error:", error);
       setError(
