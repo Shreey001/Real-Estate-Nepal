@@ -29,6 +29,11 @@ function Login() {
 
       // On successful login, update user in context
       if (res.data && res.data.user) {
+        // Store token in localStorage if provided in response body
+        if (res.data.token) {
+          localStorage.setItem("authToken", res.data.token);
+        }
+
         updateUser(res.data.user);
         navigate("/");
       } else {

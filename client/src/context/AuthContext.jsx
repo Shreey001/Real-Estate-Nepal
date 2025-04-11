@@ -11,8 +11,8 @@ export function AuthContextProvider({ children }) {
 
   useEffect(() => {
     const validateToken = async () => {
-      // Only validate if we have a user in localStorage
-      if (!localStorage.getItem("user")) {
+      // Only validate if we have a user in localStorage or a token
+      if (!localStorage.getItem("user") && !localStorage.getItem("authToken")) {
         setLoading(false);
         return;
       }
@@ -26,12 +26,14 @@ export function AuthContextProvider({ children }) {
         } else {
           // Clear user data if validation returns invalid data
           localStorage.removeItem("user");
+          localStorage.removeItem("authToken");
           setCurrentUser(null);
         }
       } catch (error) {
         console.error("Token validation failed:", error);
         // Clear storage on validation failure
         localStorage.removeItem("user");
+        localStorage.removeItem("authToken");
         setCurrentUser(null);
       } finally {
         setLoading(false);
@@ -47,6 +49,7 @@ export function AuthContextProvider({ children }) {
       localStorage.setItem("user", JSON.stringify(data));
     } else {
       localStorage.removeItem("user");
+      localStorage.removeItem("authToken");
     }
   };
 
@@ -58,6 +61,7 @@ export function AuthContextProvider({ children }) {
     } finally {
       // Clear all storage
       localStorage.removeItem("user");
+      localStorage.removeItem("authToken");
       setCurrentUser(null);
 
       // Clear cookies manually as well

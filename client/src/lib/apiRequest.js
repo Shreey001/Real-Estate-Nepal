@@ -28,7 +28,11 @@ const processQueue = (error, token = null) => {
 // Request interceptor
 apiRequest.interceptors.request.use(
   (config) => {
-    // We're using HttpOnly cookies for auth, so no need to set Authorization header
+    // Try to use token from localStorage if available (as fallback)
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
@@ -50,6 +54,9 @@ apiRequest.interceptors.response.use(
           failedQueue.push({ resolve, reject });
         })
           .then((token) => {
+            if (token) {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+            }
             return apiRequest(originalRequest);
           })
           .catch((err) => {
@@ -67,8 +74,15 @@ apiRequest.interceptors.response.use(
         // Success - mark refreshing as complete
         isRefreshing = false;
 
-        // Process queue with new token
-        processQueue(null, response.data.accessToken);
+        // Store token and process queue if provided
+        if (response.data.accessToken) {
+          const token = response.data.accessToken;
+          localStorage.setItem("authToken", token);
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          processQueue(null, token);
+        } else {
+          processQueue(new Error("No token in refresh response"), null);
+        }
 
         // Retry the original request
         return apiRequest(originalRequest);
@@ -79,6 +93,7 @@ apiRequest.interceptors.response.use(
 
         // Clear user data
         localStorage.removeItem("user");
+        localStorage.removeItem("authToken");
 
         // Only redirect if not already on login or register page
         const currentPath = window.location.pathname;
