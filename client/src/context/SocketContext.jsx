@@ -16,31 +16,47 @@ export function SocketContextProvider({ children }) {
         addTrailingSlash: false,
         withCredentials: true,
         transports: ["websocket", "polling"],
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        autoConnect: true,
+        secure: true,
       }
     );
+
+    socketInstance.on("connect_error", (error) => {
+      console.error("Socket connection error:", error.message);
+    });
+
+    socketInstance.on("connect", () => {
+      console.log("Socket connected successfully");
+    });
+
+    socketInstance.on("disconnect", (reason) => {
+      console.log("Socket disconnected:", reason);
+    });
 
     setSocket(socketInstance);
 
     return () => {
-      socketInstance.disconnect();
+      if (socketInstance) {
+        socketInstance.disconnect();
+      }
     };
   }, []);
 
   useEffect(() => {
     if (currentUser && socket) {
+      // Emit new user event when user logs in
       socket.emit("newUser", currentUser.id);
 
-      socket.on("connect", () => {
-        console.log("Connected to socket server");
-      });
-
-      socket.on("connect_error", (error) => {
-        console.error("Socket connection error:", error);
+      // Handle reconnection
+      socket.io.on("reconnect", () => {
+        console.log("Socket reconnected, re-registering user");
+        socket.emit("newUser", currentUser.id);
       });
 
       return () => {
-        socket.off("connect");
-        socket.off("connect_error");
+        socket.io.off("reconnect");
       };
     }
   }, [currentUser, socket]);

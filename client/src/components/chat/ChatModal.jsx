@@ -105,9 +105,26 @@ function ChatModal({ receiverId, receiverUsername, receiverAvatar, onClose }) {
   // Listen for incoming messages
   useEffect(() => {
     if (socket && chat) {
-      socket.on("getMessage", (data) => {
-        if (data.chatId === chat.id) {
-          setMessages((prev) => [...prev, data]);
+      socket.on("getMessage", ({ senderId, message, conversationId }) => {
+        if (conversationId === chat.id) {
+          const newMessage = {
+            id: Date.now().toString(), // Temporary ID for new messages
+            senderId,
+            text: message,
+            createdAt: new Date().toISOString(),
+          };
+
+          setMessages((prev) => {
+            // Check if message already exists
+            const messageExists = prev.some(
+              (msg) => msg.text === message && msg.senderId === senderId
+            );
+            if (messageExists) {
+              return prev;
+            }
+            return [...prev, newMessage];
+          });
+
           // Mark message as read
           apiRequest
             .post(`/chats/read/${chat.id}`)
@@ -116,11 +133,17 @@ function ChatModal({ receiverId, receiverUsername, receiverAvatar, onClose }) {
             );
         }
       });
+
+      // Handle socket reconnection
+      socket.io.on("reconnect", () => {
+        console.log("ChatModal: Socket reconnected");
+      });
     }
 
     return () => {
       if (socket) {
         socket.off("getMessage");
+        socket.io.off("reconnect");
       }
     };
   }, [socket, chat]);
@@ -138,22 +161,24 @@ function ChatModal({ receiverId, receiverUsername, receiverAvatar, onClose }) {
       });
       console.log("Message sent response:", response.data);
 
-      // Extract message data - only use the message object
+      // Extract message data
       const messageData = response.data.message;
 
       // Add the message to our local state
       setMessages((prev) => [...prev, messageData]);
       textareaRef.current.value = "";
 
-      // Send message via socket without redundant data
+      // Send message via socket
       if (socket) {
         console.log(
           "Emitting sendMessage socket event to receiverId:",
           receiverId
         );
         socket.emit("sendMessage", {
+          senderId: currentUser.id,
           receiverId,
-          data: messageData,
+          message: text,
+          conversationId: chat.id,
         });
       }
     } catch (error) {

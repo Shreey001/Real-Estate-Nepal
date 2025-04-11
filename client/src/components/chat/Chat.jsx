@@ -108,7 +108,7 @@ function Chat({ chats }) {
         setChat((prev) => ({
           ...prev,
           messages: [...prev.messages, newMessage],
-          lastMessage: text, // Update lastMessage property
+          lastMessage: text,
         }));
       }
 
@@ -117,8 +117,10 @@ function Chat({ chats }) {
       if (socket && chat.receiver?.id) {
         console.log("Emitting sendMessage to:", chat.receiver.id);
         socket.emit("sendMessage", {
+          senderId: currentUser.id,
           receiverId: chat.receiver.id,
-          data: newMessage,
+          message: text,
+          conversationId: chat.id,
         });
       } else {
         console.error("Missing socket or receiver ID:", {
@@ -139,39 +141,46 @@ function Chat({ chats }) {
         console.log(error);
       }
     };
+
     if (chat && socket) {
-      socket.on("getMessage", (data) => {
-        if (chat.id === data.chatId) {
-          // Only add the message if it doesn't already exist
+      // Listen for new messages
+      socket.on("getMessage", ({ senderId, message, conversationId }) => {
+        if (chat.id === conversationId) {
+          const newMessage = {
+            id: Date.now().toString(), // Temporary ID for new messages
+            senderId,
+            text: message,
+            createdAt: new Date().toISOString(),
+          };
+
           setChat((prev) => {
             // Check if message already exists
             const messageExists = prev.messages.some(
-              (msg) => msg.id === data.id
+              (msg) => msg.text === message && msg.senderId === senderId
             );
             if (messageExists) {
-              return prev; // Don't update if message already exists
+              return prev;
             }
             return {
               ...prev,
-              messages: [...prev.messages, data],
-              lastMessage: data.text, // Important: Update lastMessage property
+              messages: [...prev.messages, newMessage],
+              lastMessage: message,
             };
           });
           read();
-
-          // Update the chat in chatList with the new lastMessage
-          // This ensures the chat list item shows the correct last message
-          processedChatList.forEach((c) => {
-            if (c.id === chat.id) {
-              c.lastMessage = data.text;
-            }
-          });
         }
       });
+
+      // Handle socket reconnection
+      socket.io.on("reconnect", () => {
+        console.log("Chat component: Socket reconnected");
+      });
     }
+
     return () => {
       if (socket) {
         socket.off("getMessage");
+        socket.io.off("reconnect");
       }
     };
   }, [socket, chat]);
