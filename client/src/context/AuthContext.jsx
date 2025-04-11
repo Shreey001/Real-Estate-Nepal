@@ -10,24 +10,32 @@ export function AuthContextProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
     const validateToken = async () => {
-      if (token) {
-        try {
-          const response = await apiRequest.get("/auth/validate");
-          setCurrentUser(response.data.user);
-        } catch (error) {
-          console.error("Token validation failed:", error);
-          // Clear storage on validation failure
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("user");
-          setCurrentUser(null);
+      try {
+        // Try to validate with cookie-based auth first
+        const response = await apiRequest.get("/auth/validate");
+        setCurrentUser(response.data.user);
+
+        // If we get here without error, store the user
+        if (response.data.user) {
+          localStorage.setItem("user", JSON.stringify(response.data.user));
         }
+      } catch (error) {
+        console.error("Token validation failed:", error);
+        // Clear storage on validation failure
+        localStorage.removeItem("user");
+        setCurrentUser(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
-    validateToken();
+    // Only validate if we think we have a user
+    if (localStorage.getItem("user")) {
+      validateToken();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   const updateUser = (data) => {
@@ -36,15 +44,8 @@ export function AuthContextProvider({ children }) {
       localStorage.setItem("user", JSON.stringify(data));
     } else {
       localStorage.removeItem("user");
-      localStorage.removeItem("accessToken");
     }
   };
-
-  useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem("user", JSON.stringify(currentUser));
-    }
-  }, [currentUser]);
 
   const logout = async () => {
     try {
@@ -52,15 +53,20 @@ export function AuthContextProvider({ children }) {
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
-      localStorage.removeItem("accessToken");
+      // Clear all storage
       localStorage.removeItem("user");
       setCurrentUser(null);
+
       // Clear cookies manually as well
       document.cookie =
         "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+      // Clear domain-specific cookies for Vercel
       if (window.location.hostname.includes(".vercel.app")) {
         document.cookie =
           "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.vercel.app;";
+        document.cookie =
+          "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=vercel.app;";
       }
     }
   };

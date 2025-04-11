@@ -8,13 +8,10 @@ const apiRequest = axios.create({
   },
 });
 
-// Request interceptor to add auth token
+// Request interceptor
 apiRequest.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    // We're using HttpOnly cookies for auth, so no need to set Authorization header
     return config;
   },
   (error) => {
@@ -33,21 +30,18 @@ apiRequest.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        // Try to refresh the token
-        const response = await apiRequest.post("/auth/refresh");
-        const { accessToken } = response.data;
+        // Try to refresh the token (this uses the HttpOnly cookie)
+        await apiRequest.post("/auth/refresh");
 
-        if (accessToken) {
-          localStorage.setItem("accessToken", accessToken);
-
-          // Retry the original request with new token
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-          return apiRequest(originalRequest);
-        }
+        // If we get here, the token was refreshed successfully
+        // Retry the original request
+        return apiRequest(originalRequest);
       } catch (refreshError) {
-        // If refresh fails, clear storage but don't redirect automatically
+        // If refresh fails, handle gracefully
+        console.error("Failed to refresh authentication", refreshError);
+
+        // Clear user data from localStorage but don't redirect automatically
         // This prevents redirect loops
-        localStorage.removeItem("accessToken");
         localStorage.removeItem("user");
 
         // Only redirect if not already on login page
@@ -55,6 +49,7 @@ apiRequest.interceptors.response.use(
         if (currentPath !== "/login" && currentPath !== "/register") {
           window.location.href = "/login";
         }
+
         return Promise.reject(refreshError);
       }
     }

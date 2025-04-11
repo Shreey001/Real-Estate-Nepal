@@ -101,3 +101,72 @@ export const logout = (req, res) => {
     message: "Logout successful",
   });
 };
+
+// For token validation
+export const validate = (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) return res.status(401).json({ message: "Not authenticated" });
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err, payload) => {
+    if (err) return res.status(403).json({ message: "Token is not valid" });
+
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: payload.userId },
+      });
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const { password, ...userInfo } = user;
+      res.status(200).json({ user: userInfo });
+    } catch (error) {
+      console.error("User fetch error:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+};
+
+// For refreshing tokens
+export const refresh = (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) return res.status(401).json({ message: "Not authenticated" });
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err, payload) => {
+    if (err) return res.status(403).json({ message: "Token is not valid" });
+
+    try {
+      // Generate a new token
+      const newToken = jwt.sign(
+        { userId: payload.userId, isAdmin: payload.isAdmin },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "30d",
+        }
+      );
+
+      // Return the new token in both cookie and response body
+      res
+        .cookie("token", newToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+          path: "/",
+          domain:
+            process.env.NODE_ENV === "production" ? "vercel.app" : undefined,
+        })
+        .status(200)
+        .json({
+          accessToken: newToken,
+          message: "Token refreshed successfully",
+        });
+    } catch (error) {
+      console.error("Token refresh error:", error);
+      res.status(500).json({ message: "Failed to refresh token" });
+    }
+  });
+};
