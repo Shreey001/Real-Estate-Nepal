@@ -3,6 +3,9 @@ import axios from "axios";
 const apiRequest = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:4000/api",
   withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 // Request interceptor to add auth token
@@ -11,6 +14,10 @@ apiRequest.interceptors.request.use(
     const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    // Ensure the URL has /api prefix
+    if (!config.url.startsWith("/api") && !config.url.startsWith("http")) {
+      config.url = `/api${config.url}`;
     }
     return config;
   },
