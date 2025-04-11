@@ -21,7 +21,7 @@ function Login() {
     const password = formData.get("password");
 
     try {
-      const res = await apiRequest.post("/auth/login  ", {
+      const res = await apiRequest.post("/auth/login", {
         username,
         password,
       });
@@ -30,7 +30,9 @@ function Login() {
 
       navigate("/");
     } catch (error) {
-      setError(error.response.data);
+      setError(
+        error.response?.data || { message: "Login failed. Please try again." }
+      );
     } finally {
       setIsLoading(false);
     }

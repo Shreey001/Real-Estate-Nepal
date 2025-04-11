@@ -1,5 +1,8 @@
 {
   "buildCommand": "bun run build",
   "installCommand": "curl -fsSL https://bun.sh/install | bash && bun install",
-  "framework": "vite"
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 } 

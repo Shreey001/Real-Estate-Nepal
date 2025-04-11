@@ -18,6 +18,7 @@ export function AuthContextProvider({ children }) {
           setCurrentUser(response.data.user);
         } catch (error) {
           console.error("Token validation failed:", error);
+          // Clear storage on validation failure
           localStorage.removeItem("accessToken");
           localStorage.removeItem("user");
           setCurrentUser(null);
@@ -54,6 +55,13 @@ export function AuthContextProvider({ children }) {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user");
       setCurrentUser(null);
+      // Clear cookies manually as well
+      document.cookie =
+        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      if (window.location.hostname.includes(".vercel.app")) {
+        document.cookie =
+          "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.vercel.app;";
+      }
     }
   };
 

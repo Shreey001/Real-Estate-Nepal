@@ -45,9 +45,16 @@ apiRequest.interceptors.response.use(
           return apiRequest(originalRequest);
         }
       } catch (refreshError) {
-        // If refresh fails, redirect to login
+        // If refresh fails, clear storage but don't redirect automatically
+        // This prevents redirect loops
         localStorage.removeItem("accessToken");
-        window.location.href = "/login";
+        localStorage.removeItem("user");
+
+        // Only redirect if not already on login page
+        const currentPath = window.location.pathname;
+        if (currentPath !== "/login" && currentPath !== "/register") {
+          window.location.href = "/login";
+        }
         return Promise.reject(refreshError);
       }
     }

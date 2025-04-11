@@ -76,8 +76,9 @@ export const login = async (req, res) => {
         secure: process.env.NODE_ENV === "production",
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        path: "/",
         domain:
-          process.env.NODE_ENV === "production" ? ".vercel.app" : undefined,
+          process.env.NODE_ENV === "production" ? "vercel.app" : undefined,
       })
       .status(200)
       .json({
