@@ -9,6 +9,17 @@ export function SocketContextProvider({ children }) {
   const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
+    if (!currentUser) {
+      // Don't create socket connection if user is not authenticated
+      return;
+    }
+
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.error("No access token found");
+      return;
+    }
+
     const socketInstance = io(
       import.meta.env.VITE_API_URL || "http://localhost:4000",
       {
@@ -20,19 +31,35 @@ export function SocketContextProvider({ children }) {
         reconnectionDelay: 1000,
         autoConnect: true,
         secure: true,
+        auth: {
+          token,
+        },
+        extraHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
     socketInstance.on("connect_error", (error) => {
       console.error("Socket connection error:", error.message);
+      if (error.message === "xhr poll error") {
+        console.log("Retrying with polling transport");
+        socketInstance.io.opts.transports = ["polling"];
+      }
     });
 
     socketInstance.on("connect", () => {
       console.log("Socket connected successfully");
+      // Re-register user after successful connection
+      socketInstance.emit("newUser", currentUser.id);
     });
 
     socketInstance.on("disconnect", (reason) => {
       console.log("Socket disconnected:", reason);
+      if (reason === "io server disconnect") {
+        // Server disconnected us, try to reconnect
+        socketInstance.connect();
+      }
     });
 
     setSocket(socketInstance);
@@ -42,24 +69,9 @@ export function SocketContextProvider({ children }) {
         socketInstance.disconnect();
       }
     };
-  }, []);
+  }, [currentUser]);
 
-  useEffect(() => {
-    if (currentUser && socket) {
-      // Emit new user event when user logs in
-      socket.emit("newUser", currentUser.id);
-
-      // Handle reconnection
-      socket.io.on("reconnect", () => {
-        console.log("Socket reconnected, re-registering user");
-        socket.emit("newUser", currentUser.id);
-      });
-
-      return () => {
-        socket.io.off("reconnect");
-      };
-    }
-  }, [currentUser, socket]);
+  // No need for second useEffect since we're handling user registration in connect event
 
   return (
     <SocketContext.Provider value={{ socket }}>
