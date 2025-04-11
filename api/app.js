@@ -15,7 +15,7 @@ const app = express();
 app.use((req, res, next) => {
   console.log("[Express] Request:", {
     method: req.method,
-    path: req.path,
+    path: req.path || req.url,
     timestamp: new Date().toISOString(),
   });
   next();
@@ -44,32 +44,19 @@ app.use(
   })
 );
 
-// Middleware with error handling
-app.use((req, res, next) => {
-  try {
-    express.json()(req, res, next);
-  } catch (error) {
-    console.error("[Express] JSON parsing error:", error);
-    next(error);
-  }
-});
+// Parse JSON and URL-encoded bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-app.use((req, res, next) => {
-  try {
-    express.urlencoded({ extended: true })(req, res, next);
-  } catch (error) {
-    console.error("[Express] URL encoding error:", error);
-    next(error);
-  }
-});
-
-app.use((req, res, next) => {
-  try {
-    cookieParser()(req, res, next);
-  } catch (error) {
-    console.error("[Express] Cookie parsing error:", error);
-    next(error);
-  }
+// Root route handler
+app.get("/", (req, res) => {
+  res.json({
+    status: "ok",
+    message: "Real Estate API is running",
+    timestamp: new Date().toISOString(),
+    env: process.env.NODE_ENV,
+  });
 });
 
 // Health check with detailed response
@@ -82,26 +69,20 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Routes with error handling
-const wrapRoute = (route) => {
-  return (req, res, next) => {
-    Promise.resolve(route(req, res, next)).catch(next);
-  };
-};
-
-app.use("/api/auth", wrapRoute(authRoutes));
-app.use("/api/users", wrapRoute(userRoutes));
-app.use("/api/posts", wrapRoute(postRoutes));
-app.use("/api/test", wrapRoute(testRoutes));
-app.use("/api/chats", wrapRoute(chatRoutes));
-app.use("/api/messages", wrapRoute(messageRoutes));
+// API routes
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/test", testRoutes);
+app.use("/api/chats", chatRoutes);
+app.use("/api/messages", messageRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error("[Express] Error:", {
     message: err.message,
     stack: err.stack,
-    path: req.path,
+    path: req.path || req.url,
     method: req.method,
   });
 
@@ -112,7 +93,7 @@ app.use((err, req, res, next) => {
         process.env.NODE_ENV === "development"
           ? err.message
           : "Something went wrong",
-      path: req.path,
+      path: req.path || req.url,
       timestamp: new Date().toISOString(),
     });
   }
@@ -121,14 +102,14 @@ app.use((err, req, res, next) => {
 // 404 handler
 app.use((req, res) => {
   console.log("[Express] 404 Not Found:", {
-    path: req.path,
+    path: req.path || req.url,
     method: req.method,
   });
 
   if (!res.headersSent) {
     res.status(404).json({
       error: "Not Found",
-      path: req.path,
+      path: req.path || req.url,
       method: req.method,
       timestamp: new Date().toISOString(),
     });
