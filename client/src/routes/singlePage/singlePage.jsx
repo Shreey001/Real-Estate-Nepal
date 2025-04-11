@@ -15,6 +15,7 @@ import apiRequest from "../../lib/apiRequest";
 import { Suspense } from "react";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
+import { AiOutlineShareAlt } from "react-icons/ai";
 import ChatModal from "../../components/chat/ChatModal";
 
 function SinglePage() {
@@ -101,6 +102,24 @@ function SinglePage() {
         </div>
         <div className="features">
           <div className="wrapper">
+            {/* Mobile-only quick action buttons */}
+            <div className="mobile-actions">
+              <button
+                className={`save-button ${saved ? "saved" : ""}`}
+                onClick={() => handleSave(post, setSaved)}
+              >
+                {saved ? <BsBookmarkFill /> : <BsBookmark />}
+                {saved ? "Saved" : "Save"}
+              </button>
+              <button
+                className="contact-button"
+                onClick={() => setShowChatModal(true)}
+              >
+                <IoChatbubbleEllipsesOutline />
+                Contact
+              </button>
+            </div>
+
             <p className="title">General Information</p>
             <div className="listVertical">
               <div className="feature">
@@ -186,16 +205,7 @@ function SinglePage() {
             </div>
 
             <div className="buttons">
-              <button
-                onClick={() => {
-                  console.log("Full post object:", post);
-                  console.log(
-                    "Contact Owner clicked - post.user data:",
-                    post.user
-                  );
-                  setShowChatModal(true);
-                }}
-              >
+              <button onClick={() => setShowChatModal(true)}>
                 <IoChatbubbleEllipsesOutline />
                 Contact Owner
               </button>
