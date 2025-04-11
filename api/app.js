@@ -26,7 +26,7 @@ app.use(
   cors({
     origin: [
       "https://real-estate-six-lyart-82.vercel.app",
-      "https://real-estate-backend-indol.vercel.app",
+      "https://real-estate-backend-indol.vercel.app/api",
       "http://localhost:5173",
       "http://localhost:3000",
     ],
