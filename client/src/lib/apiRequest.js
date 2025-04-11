@@ -2,7 +2,7 @@ import axios from "axios";
 
 const apiRequest = axios.create({
   baseURL: (import.meta.env.VITE_API_URL || "http://localhost:4000") + "/api",
-  withCredentials: true,
+  withCredentials: true, // Still include credentials for cookies as backup
   headers: {
     "Content-Type": "application/json",
   },
@@ -25,14 +25,17 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
-// Request interceptor
+// Request interceptor - add token to every request
 apiRequest.interceptors.request.use(
   (config) => {
-    // Try to use token from localStorage if available (as fallback)
+    // Get token from localStorage
     const token = localStorage.getItem("authToken");
+
+    // If token exists, add to headers
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => {
@@ -46,17 +49,33 @@ apiRequest.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Handle 401 errors and token refresh
+    // If the error is 401 and we haven't retried yet
     if (error.response?.status === 401 && !originalRequest._retry) {
+      // Prevent infinite loops
+      if (
+        originalRequest.url.includes("/auth/refresh") ||
+        originalRequest.url.includes("/auth/login") ||
+        originalRequest.url.includes("/auth/validate")
+      ) {
+        // Clear auth data since refresh/login/validate fails
+        localStorage.removeItem("user");
+        localStorage.removeItem("authToken");
+
+        // Only redirect if not already on login or register page
+        const currentPath = window.location.pathname;
+        if (currentPath !== "/login" && currentPath !== "/register") {
+          window.location.href = "/login";
+        }
+        return Promise.reject(error);
+      }
+
       if (isRefreshing) {
         // If already refreshing, queue this request
         return new Promise(function (resolve, reject) {
           failedQueue.push({ resolve, reject });
         })
           .then((token) => {
-            if (token) {
-              originalRequest.headers.Authorization = `Bearer ${token}`;
-            }
+            originalRequest.headers.Authorization = `Bearer ${token}`;
             return apiRequest(originalRequest);
           })
           .catch((err) => {
@@ -68,47 +87,56 @@ apiRequest.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Only attempt a refresh once, then redirect to login
-        const response = await apiRequest.post("/auth/refresh");
+        // Try to refresh the token
+        const token = localStorage.getItem("authToken");
+        const response = await apiRequest.post(
+          "/auth/refresh",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        // Success - mark refreshing as complete
+        // Success - update token and retry
         isRefreshing = false;
 
-        // Store token and process queue if provided
         if (response.data.accessToken) {
-          const token = response.data.accessToken;
-          localStorage.setItem("authToken", token);
-          originalRequest.headers.Authorization = `Bearer ${token}`;
-          processQueue(null, token);
-        } else {
-          processQueue(new Error("No token in refresh response"), null);
-        }
+          // Store new token
+          localStorage.setItem("authToken", response.data.accessToken);
 
-        // Retry the original request
-        return apiRequest(originalRequest);
+          // Update headers and process queue
+          originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`;
+          processQueue(null, response.data.accessToken);
+
+          // Retry the original request
+          return apiRequest(originalRequest);
+        } else {
+          // No token in response
+          processQueue(new Error("No token returned"), null);
+          return Promise.reject(new Error("Authentication failed"));
+        }
       } catch (refreshError) {
-        // Refresh failed - reset the flag and clear queue
+        // Refresh failed - clear auth and redirect
         isRefreshing = false;
         processQueue(refreshError, null);
 
-        // Clear user data
+        // Clear auth data
         localStorage.removeItem("user");
         localStorage.removeItem("authToken");
 
         // Only redirect if not already on login or register page
         const currentPath = window.location.pathname;
         if (currentPath !== "/login" && currentPath !== "/register") {
-          // Redirect with a slight delay to avoid redirect loops
-          setTimeout(() => {
-            window.location.href = "/login";
-          }, 100);
+          window.location.href = "/login";
         }
 
         return Promise.reject(refreshError);
       }
     }
 
-    // For all other errors, just reject the promise
+    // For all other errors, just pass through
     return Promise.reject(error);
   }
 );

@@ -11,16 +11,22 @@ export function AuthContextProvider({ children }) {
 
   useEffect(() => {
     const validateToken = async () => {
-      // Only validate if we have a user in localStorage or a token
-      if (!localStorage.getItem("user") && !localStorage.getItem("authToken")) {
+      // Only attempt validation if we have a token
+      const token = localStorage.getItem("authToken");
+      if (!token) {
         setLoading(false);
         return;
       }
 
       try {
-        const response = await apiRequest.get("/auth/validate");
+        const response = await apiRequest.get("/auth/validate", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         // Update user data if validation succeeds
-        if (response.data.user) {
+        if (response.data?.user) {
           setCurrentUser(response.data.user);
           localStorage.setItem("user", JSON.stringify(response.data.user));
         } else {
@@ -55,7 +61,18 @@ export function AuthContextProvider({ children }) {
 
   const logout = async () => {
     try {
-      await apiRequest.post("/auth/logout");
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        await apiRequest.post(
+          "/auth/logout",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
@@ -63,16 +80,6 @@ export function AuthContextProvider({ children }) {
       localStorage.removeItem("user");
       localStorage.removeItem("authToken");
       setCurrentUser(null);
-
-      // Clear cookies manually as well
-      document.cookie =
-        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      document.cookie =
-        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.vercel.app;";
-      document.cookie =
-        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=vercel.app;";
-      document.cookie =
-        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; samesite=none;";
     }
   };
 

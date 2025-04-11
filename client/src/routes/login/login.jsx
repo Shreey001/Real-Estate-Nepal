@@ -27,14 +27,15 @@ function Login() {
         password,
       });
 
-      // On successful login, update user in context
-      if (res.data && res.data.user) {
-        // Store token in localStorage if provided in response body
-        if (res.data.token) {
-          localStorage.setItem("authToken", res.data.token);
-        }
+      // On successful login
+      if (res.data?.user && res.data?.token) {
+        // Store token in localStorage
+        localStorage.setItem("authToken", res.data.token);
 
+        // Update user in context
         updateUser(res.data.user);
+
+        // Navigate to home page
         navigate("/");
       } else {
         setError({ message: "Invalid response from server" });

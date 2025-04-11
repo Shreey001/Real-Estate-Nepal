@@ -37,31 +37,31 @@ export const login = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    //check if user exists
+    // Check if user exists
     const user = await prisma.user.findUnique({
       where: { username },
     });
 
-    //if user does not exist
+    // If user does not exist
     if (!user) {
       return res.status(401).json({
         message: "Invalid credentials",
       });
     }
 
-    //check if the password is correct
+    // Check if the password is correct
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    //if password is incorrect
+    // If password is incorrect
     if (!isPasswordValid) {
       return res.status(401).json({
         message: "Invalid credentials",
       });
     }
-    //generate a token
 
+    // Generate a token
     const token = jwt.sign(
-      { userId: user.id, isAdmin: true },
+      { userId: user.id, isAdmin: user.isAdmin || false },
       process.env.JWT_SECRET,
       {
         expiresIn: "30d",
@@ -70,22 +70,23 @@ export const login = async (req, res) => {
 
     const { password: userPassword, ...userInfo } = user;
 
-    res
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-        sameSite: "none",
-        path: "/",
-      })
-      .status(200)
-      .json({
-        user: userInfo,
-        token: token,
-      });
+    // Still set the cookie for backward compatibility
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      sameSite: "none",
+      path: "/",
+    });
+
+    // But focus on returning the token in the response body
+    return res.status(200).json({
+      user: userInfo,
+      token: token,
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    return res.status(500).json({
       message: "Login failed",
       error: error.message,
     });
@@ -108,7 +109,16 @@ export const logout = (req, res) => {
 
 // For token validation
 export const validate = (req, res) => {
-  const token = req.cookies.token;
+  // First try to get token from cookies
+  let token = req.cookies.token;
+
+  // If no cookie token, check for Authorization header
+  if (!token && req.headers.authorization) {
+    const authHeader = req.headers.authorization;
+    if (authHeader.startsWith("Bearer ")) {
+      token = authHeader.substring(7);
+    }
+  }
 
   if (!token) return res.status(401).json({ message: "Not authenticated" });
 
@@ -135,7 +145,16 @@ export const validate = (req, res) => {
 
 // For refreshing tokens
 export const refresh = (req, res) => {
-  const token = req.cookies.token;
+  // First try to get token from cookies
+  let token = req.cookies.token;
+
+  // If no cookie token, check for Authorization header
+  if (!token && req.headers.authorization) {
+    const authHeader = req.headers.authorization;
+    if (authHeader.startsWith("Bearer ")) {
+      token = authHeader.substring(7);
+    }
+  }
 
   if (!token) return res.status(401).json({ message: "Not authenticated" });
 
@@ -152,23 +171,23 @@ export const refresh = (req, res) => {
         }
       );
 
-      // Return the new token in both cookie and response body
-      res
-        .cookie("token", newToken, {
-          httpOnly: true,
-          secure: true,
-          maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-          sameSite: "none",
-          path: "/",
-        })
-        .status(200)
-        .json({
-          accessToken: newToken,
-          message: "Token refreshed successfully",
-        });
+      // Set cookie for backward compatibility
+      res.cookie("token", newToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        sameSite: "none",
+        path: "/",
+      });
+
+      // Focus on returning token in body
+      return res.status(200).json({
+        accessToken: newToken,
+        message: "Token refreshed successfully",
+      });
     } catch (error) {
       console.error("Token refresh error:", error);
-      res.status(500).json({ message: "Failed to refresh token" });
+      return res.status(500).json({ message: "Failed to refresh token" });
     }
   });
 };
