@@ -2,4 +2,15 @@
   width: 100%;
   height: 100%;
   border-radius: 20px;
+  z-index: 1; /* Lower z-index to ensure it doesn't overlap navbar */
+}
+
+/* Set z-index for Leaflet controls and popups */
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 800 !important; /* High enough for map controls, but below navbar */
+}
+
+.leaflet-popup {
+  z-index: 900 !important; /* High enough for popups, but below navbar */
 }

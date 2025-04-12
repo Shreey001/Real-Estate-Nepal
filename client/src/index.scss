@@ -38,3 +38,25 @@ body {
 .layout .content .newPostPage {
   height: 100%;
 }
+
+// Global Leaflet map z-index fixes
+.leaflet-pane {
+  z-index: 400 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 800 !important;
+}
+
+.leaflet-popup-pane {
+  z-index: 900 !important;
+}
+
+.leaflet-tooltip-pane {
+  z-index: 700 !important;
+}
+
+.leaflet-control-zoom {
+  z-index: 800 !important;
+}

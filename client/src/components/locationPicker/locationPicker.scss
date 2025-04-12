@@ -68,6 +68,14 @@
     overflow: hidden;
     z-index: 1;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+    /* Make sure the Leaflet controls don't overlap with navbar */
+    .leaflet-control-container {
+      .leaflet-top,
+      .leaflet-bottom {
+        z-index: 800 !important;
+      }
+    }
   }
 
   .selected-location {

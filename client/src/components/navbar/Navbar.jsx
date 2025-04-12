@@ -72,6 +72,14 @@ export default function Navbar() {
     }
   };
 
+  // Handle logo click - scroll to top if on homepage
+  const handleLogoClick = (e) => {
+    if (location.pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       {/* Placeholder div to prevent content jump when navbar becomes fixed */}
@@ -80,7 +88,7 @@ export default function Navbar() {
       <header className={`navbar-wrapper ${scrolled ? "scrolled" : ""}`}>
         <nav className="navbar">
           <div className="navbar-logo">
-            <Link to="/">
+            <Link to="/" onClick={handleLogoClick}>
               <img src="/logo.png" alt="RealEstate Logo" />
             </Link>
           </div>
