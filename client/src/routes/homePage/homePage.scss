@@ -2,6 +2,18 @@
 $tablet-width: 768px;
 $mobile-width: 576px;
 
+// Custom color palette for a more professional look
+$light-bg: #f7f9fc;
+$subtle-accent: #e8eef7;
+$light-accent: #d6e4f7;
+$card-bg: #ffffff;
+$section-divider: #e0e7f2;
+$text-dark: #2c3e50;
+$text-medium: #546778;
+$primary-blue: #0c5f8f;
+$primary-light-blue: #e7f3ff;
+$secondary-orange: #f09946;
+
 // Responsive mixins
 @mixin tablet {
   @media (max-width: $tablet-width) {
@@ -40,6 +52,7 @@ $mobile-width: 576px;
   width: 100%;
   height: auto;
   overflow: visible;
+  background-color: $light-bg;
 
   // Hero section with full-width background image
   .hero-section {
@@ -217,20 +230,20 @@ $mobile-width: 576px;
 
   // Common section styles
   section {
-    padding: 60px 20px;
+    padding: 70px 20px;
     position: relative;
     width: 100%;
 
     @include lg {
-      padding: 50px 20px;
+      padding: 60px 20px;
     }
 
     @include md {
-      padding: 40px 20px;
+      padding: 50px 20px;
     }
 
     @include sm {
-      padding: 30px 20px;
+      padding: 40px 20px;
     }
   }
 
@@ -244,7 +257,20 @@ $mobile-width: 576px;
     font-size: 36px;
     margin-bottom: 15px;
     text-align: center;
-    color: var(--text-primary);
+    color: $text-dark;
+    position: relative;
+    padding-bottom: 15px;
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: $secondary-orange;
+    }
 
     @include md {
       font-size: 30px;
@@ -262,7 +288,7 @@ $mobile-width: 576px;
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
-    color: var(--text-secondary);
+    color: $text-medium;
 
     @include md {
       font-size: 16px;
@@ -272,7 +298,23 @@ $mobile-width: 576px;
 
   // Category section styles
   .category-section {
-    background-color: #f9f9f9;
+    background-color: $light-bg;
+    position: relative;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        transparent,
+        $section-divider,
+        transparent
+      );
+    }
 
     @include sm {
       padding-top: 40px;
@@ -293,10 +335,10 @@ $mobile-width: 576px;
       }
 
       .category-card {
-        background-color: white;
-        border-radius: 10px;
+        background-color: $card-bg;
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 6px 20px rgba(12, 95, 143, 0.08);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         text-decoration: none;
         color: inherit;
@@ -305,7 +347,7 @@ $mobile-width: 576px;
 
         &:hover {
           transform: translateY(-5px);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 10px 25px rgba(12, 95, 143, 0.15);
 
           .category-image img {
             transform: scale(1.05);
@@ -325,20 +367,22 @@ $mobile-width: 576px;
         }
 
         .category-content {
-          padding: 20px;
+          padding: 24px;
           flex-grow: 1;
           display: flex;
           flex-direction: column;
+          border-top: 1px solid $light-accent;
 
           h3 {
-            font-size: 22px;
+            font-size: 20px;
             margin-bottom: 10px;
-            color: var(--text-primary);
+            color: $text-dark;
+            font-weight: 600;
           }
 
           p {
             font-size: 14px;
-            color: var(--text-secondary);
+            color: $text-medium;
             line-height: 1.5;
           }
         }
@@ -348,6 +392,32 @@ $mobile-width: 576px;
 
   // Locations section styles
   .locations-section {
+    background-color: $subtle-accent;
+    position: relative;
+
+    &:before,
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        transparent,
+        $section-divider,
+        transparent
+      );
+    }
+
+    &:before {
+      top: 0;
+    }
+
+    &:after {
+      bottom: 0;
+    }
+
     .location-cards {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -363,10 +433,10 @@ $mobile-width: 576px;
 
       .location-card {
         position: relative;
-        border-radius: 10px;
+        border-radius: 12px;
         overflow: hidden;
         height: 250px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 20px rgba(12, 95, 143, 0.1);
         transition: transform 0.3s ease;
         text-decoration: none;
 
@@ -375,6 +445,14 @@ $mobile-width: 576px;
 
           img {
             transform: scale(1.1);
+          }
+
+          .location-info {
+            background: linear-gradient(
+              to top,
+              rgba(12, 95, 143, 0.9),
+              transparent
+            );
           }
         }
 
@@ -390,9 +468,10 @@ $mobile-width: 576px;
           bottom: 0;
           left: 0;
           right: 0;
-          padding: 20px;
+          padding: 25px 20px;
           background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
           color: white;
+          transition: background 0.3s ease;
 
           h3 {
             font-size: 22px;
@@ -410,16 +489,32 @@ $mobile-width: 576px;
 
   // Testimonials section styles
   .testimonials-section {
-    background-color: #fff;
-    padding: 60px 0;
+    background-color: $light-bg;
+    padding: 70px 0;
     text-align: center;
+    position: relative;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        transparent,
+        $section-divider,
+        transparent
+      );
+    }
 
     @include md {
-      padding: 50px 0;
+      padding: 60px 0;
     }
 
     @include sm {
-      padding: 40px 0;
+      padding: 50px 0;
     }
 
     .section-container {
@@ -428,7 +523,7 @@ $mobile-width: 576px;
     }
 
     .section-title {
-      color: #f39c12;
+      color: $primary-blue;
       position: relative;
       display: inline-block;
       margin-bottom: 30px;
@@ -441,7 +536,7 @@ $mobile-width: 576px;
         transform: translateX(-50%);
         width: 100px;
         height: 3px;
-        background-color: #f39c12;
+        background-color: $secondary-orange;
       }
     }
 
@@ -456,22 +551,22 @@ $mobile-width: 576px;
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       background-color: white;
       border: none;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 15px rgba(12, 95, 143, 0.15);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       z-index: 10;
       transition: all 0.2s ease;
-      color: #333;
+      color: $primary-blue;
 
       &:hover {
-        background-color: #f39c12;
+        background-color: $primary-blue;
         color: white;
       }
 
@@ -496,8 +591,8 @@ $mobile-width: 576px;
       }
 
       @include sm {
-        width: 35px;
-        height: 35px;
+        width: 38px;
+        height: 38px;
 
         &.prev {
           left: 0;
@@ -513,13 +608,13 @@ $mobile-width: 576px;
       display: flex;
       overflow-x: hidden;
       scroll-behavior: auto;
-      padding: 10px 0;
+      padding: 15px 0 25px;
       width: 100%;
       gap: 20px;
 
       @include sm {
         gap: 15px;
-        padding: 5px 0;
+        padding: 10px 0 20px;
       }
     }
 
@@ -548,37 +643,38 @@ $mobile-width: 576px;
       &.active {
         opacity: 1;
         transform: scale(1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 25px rgba(12, 95, 143, 0.1);
       }
 
       .testimonial-card-inner {
-        background-color: #f7f7f7;
-        border-radius: 5px;
+        background-color: $card-bg;
+        border-radius: 12px;
         height: 100%;
         display: flex;
         flex-direction: column;
-        padding: 20px;
-        padding-top: 55px;
+        padding: 25px;
+        padding-top: 60px;
         text-align: left;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid $light-accent;
 
         @include sm {
-          padding: 15px;
-          padding-top: 50px;
+          padding: 20px;
+          padding-top: 55px;
         }
       }
 
       .testimonial-image {
-        width: 80px;
-        height: 80px;
+        width: 85px;
+        height: 85px;
         border-radius: 50%;
         overflow: hidden;
         position: absolute;
         top: 5px;
         left: 50%;
         transform: translateX(-50%);
-        border: 4px solid #fff;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border: 4px solid $card-bg;
+        box-shadow: 0 4px 12px rgba(12, 95, 143, 0.15);
         z-index: 1;
 
         img {
@@ -588,18 +684,18 @@ $mobile-width: 576px;
         }
 
         @include sm {
-          width: 70px;
-          height: 70px;
+          width: 75px;
+          height: 75px;
           top: 5px;
         }
       }
 
       .testimonial-quote {
-        font-size: 14px;
-        line-height: 1.5;
-        color: #555;
+        font-size: 15px;
+        line-height: 1.6;
+        color: $text-medium;
         position: relative;
-        margin-bottom: 18px;
+        margin-bottom: 20px;
         flex-grow: 1;
         display: -webkit-box;
         -webkit-line-clamp: 5;
@@ -610,7 +706,7 @@ $mobile-width: 576px;
         &::before,
         &::after {
           content: '"';
-          color: #f39c12;
+          color: $secondary-orange;
           font-family: Georgia, serif;
           font-size: 24px;
           font-weight: bold;
@@ -627,8 +723,8 @@ $mobile-width: 576px;
         }
 
         @include sm {
-          font-size: 13px;
-          line-height: 1.4;
+          font-size: 14px;
+          line-height: 1.5;
           margin-bottom: 15px;
 
           &::before {
@@ -640,22 +736,22 @@ $mobile-width: 576px;
       }
 
       .user-name {
-        font-size: 16px;
+        font-size: 17px;
         font-weight: 600;
-        color: #333;
+        color: $text-dark;
         margin-bottom: 4px;
         display: flex;
         align-items: center;
 
         @include sm {
-          font-size: 15px;
+          font-size: 16px;
           margin-bottom: 3px;
         }
       }
 
       .user-role {
-        font-size: 12px;
-        color: #888;
+        font-size: 13px;
+        color: $text-medium;
         margin-bottom: 0;
         display: flex;
         align-items: center;
@@ -665,12 +761,12 @@ $mobile-width: 576px;
           display: inline-block;
           width: 20px;
           height: 2px;
-          background-color: #f39c12;
+          background-color: $secondary-orange;
           margin-right: 8px;
         }
 
         @include sm {
-          font-size: 11px;
+          font-size: 12px;
 
           &::before {
             width: 15px;
@@ -690,14 +786,14 @@ $mobile-width: 576px;
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background-color: #dddddd;
+        background-color: $light-accent;
         border: none;
         padding: 0;
         cursor: pointer;
         transition: all 0.2s ease;
 
         &.active {
-          background-color: #f39c12;
+          background-color: $secondary-orange;
           transform: scale(1.2);
         }
       }
