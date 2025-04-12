@@ -33,19 +33,19 @@
 }
 
 .navbar-wrapper {
-  background-color: var(--background-light);
+  background-color: var(--primary-color);
   box-shadow: var(--shadow-sm);
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
   width: 100%;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
 
   &.scrolled {
     box-shadow: var(--shadow-md);
-    background-color: rgba(255, 255, 255, 0.98);
+    background-color: rgba(12, 95, 143, 0.98);
     border-bottom-color: transparent;
 
     .navbar {
@@ -115,7 +115,7 @@
     top: var(--navbar-height-mobile);
     left: 0;
     right: 0;
-    background-color: var(--background-light);
+    background-color: var(--primary-color);
     flex-direction: column;
     align-items: flex-start;
     padding: 20px;
@@ -146,14 +146,14 @@
     @include lg {
       width: 100%;
       height: auto;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     a,
     button.dropdown-toggle {
       font-size: 15px;
       font-weight: 500;
-      color: var(--text-secondary);
+      color: rgba(255, 255, 255, 0.9);
       text-decoration: none;
       padding: 0 15px;
       height: 100%;
@@ -174,7 +174,7 @@
 
       &:hover,
       &.active {
-        color: var(--primary-color);
+        color: white;
       }
 
       &.active::after {
@@ -184,7 +184,7 @@
         left: 15px;
         right: 15px;
         height: 3px;
-        background-color: var(--primary-color);
+        background-color: var(--secondary-color);
         border-radius: 3px 3px 0 0;
 
         @include lg {
@@ -198,12 +198,12 @@
       }
 
       &.active-section {
-        background-color: var(--primary-light);
-        color: var(--primary-color);
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
         font-weight: 600;
 
         /* Add a left border indicator for active section */
-        border-left: 3px solid var(--primary-color);
+        border-left: 3px solid var(--secondary-color);
         padding-left: 13px; /* Adjust padding to maintain alignment */
 
         .menu-icon {
@@ -244,22 +244,22 @@
       transition: all 0.2s;
 
       &.login-button {
-        color: var(--primary-color);
-        border: 1px solid var(--primary-color);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.8);
         background-color: transparent;
 
         &:hover {
-          background-color: var(--primary-light);
+          background-color: rgba(255, 255, 255, 0.1);
         }
       }
 
       &.signup-button {
-        color: white;
-        background-color: var(--primary-color);
-        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+        background-color: white;
+        border: 1px solid white;
 
         &:hover {
-          background-color: var(--primary-dark);
+          background-color: rgba(255, 255, 255, 0.9);
         }
       }
     }
@@ -289,164 +289,193 @@
       transition: all 0.2s;
 
       &.login-button {
-        color: var(--primary-color);
-        border: 1px solid var(--primary-color);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.8);
         background-color: transparent;
 
         &:hover {
-          background-color: var(--primary-light);
+          background-color: rgba(255, 255, 255, 0.1);
         }
       }
 
       &.signup-button {
-        color: white;
-        background-color: var(--primary-color);
-        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+        background-color: white;
+        border: 1px solid white;
 
         &:hover {
-          background-color: var(--primary-dark);
+          background-color: rgba(255, 255, 255, 0.9);
         }
       }
     }
   }
 
-  .user-menu-wrapper {
+  // Profile Menu Styles - Modern Design
+  .profile-menu-container {
     position: relative;
 
-    .user-menu {
+    .profile-menu-trigger {
       display: flex;
       align-items: center;
+      gap: 10px;
       cursor: pointer;
-      position: relative;
+      padding: 5px 8px;
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
 
-      .user-info {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 5px 10px;
-        border-radius: var(--radius-md);
-        transition: background-color 0.2s;
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
 
-        &:hover {
-          background-color: var(--background-off);
-        }
+      .profile-avatar-wrapper {
+        position: relative;
+        height: 40px;
+        width: 40px;
 
-        .user-avatar {
-          width: 36px;
-          height: 36px;
+        .profile-avatar {
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
           object-fit: cover;
-          border: 2px solid var(--primary-light);
+          border: 2px solid rgba(255, 255, 255, 0.2);
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .user-name {
-          font-weight: 500;
-          color: var(--text-primary);
-
-          @include lg {
-            display: none;
-          }
-        }
-
-        .dropdown-icon {
-          font-size: 10px;
-          color: var(--text-secondary);
-          margin-left: 5px;
-          transition: transform 0.2s;
-
-          @include lg {
-            display: none;
-          }
-        }
-
-        .notification-badge {
-          background-color: #e53935;
-          color: white;
-          font-size: 12px;
-          font-weight: bold;
-          min-width: 20px;
-          height: 20px;
-          border-radius: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+        .notification-indicator {
           position: absolute;
-          top: 0;
-          right: 0;
-          transform: translate(25%, -25%);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          top: -3px;
+          right: -3px;
+          width: 14px;
+          height: 14px;
+          background-color: #e53935;
+          border-radius: 50%;
+          border: 2px solid var(--primary-color);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
         }
       }
 
-      .user-dropdown {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        width: 220px;
-        background-color: var(--background-light);
-        border-radius: var(--radius-md);
-        box-shadow: var(--shadow-md);
-        margin-top: 10px;
-        z-index: 1000;
-        overflow: hidden;
-        border: 1px solid var(--border-color);
+      .profile-name {
+        font-weight: 500;
+        color: white;
+        font-size: 14px;
 
-        animation: dropdownFadeIn 0.2s ease-out;
+        @include lg {
+          display: none;
+        }
+      }
 
-        @keyframes dropdownFadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+      .dropdown-chevron {
+        color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        align-items: center;
+        transition: transform 0.2s ease;
+
+        @include lg {
+          display: none;
         }
 
-        a,
-        button {
-          padding: 12px 16px;
+        &.active {
+          transform: rotate(180deg);
+        }
+
+        svg {
+          stroke-width: 2px;
+        }
+      }
+    }
+
+    .profile-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 280px;
+      background-color: var(--background-light);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      z-index: 1000;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      animation: dropdownFadeIn 0.2s ease-out;
+
+      @keyframes dropdownFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .dropdown-header {
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid var(--border-color);
+        background-color: var(--background-off);
+
+        .dropdown-avatar {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 2px solid white;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-user-info {
+          display: flex;
+          flex-direction: column;
+
+          h4 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+          }
+
+          .user-email {
+            font-size: 12px;
+            color: var(--text-secondary);
+          }
+        }
+      }
+
+      .dropdown-menu-items {
+        padding: 8px 0;
+
+        .dropdown-item {
+          padding: 10px 16px;
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 12px;
           width: 100%;
           background: none;
           border: none;
           text-align: left;
-          font-size: 15px;
-          color: var(--text-secondary);
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--text-primary);
           text-decoration: none;
-          transition: all 0.2s;
+          transition: all 0.15s ease;
           cursor: pointer;
           position: relative;
 
           &:hover {
-            background-color: var(--primary-light);
-            color: var(--primary-color);
+            background-color: rgba(12, 95, 143, 0.08);
           }
 
-          &.active-section {
-            background-color: var(--primary-light);
-            color: var(--primary-color);
-            font-weight: 600;
-
-            /* Add a left border indicator for active section */
-            border-left: 3px solid var(--primary-color);
-            padding-left: 13px; /* Adjust padding to maintain alignment */
-
-            .menu-icon {
-              font-size: 20px; /* Slightly larger icon for active section */
-            }
-
-            .menu-badge {
-              background-color: #d32f2f; /* Slightly darker red for contrast against the active background */
-              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            }
+          svg {
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            transition: all 0.15s ease;
           }
 
-          .menu-icon {
-            font-size: 18px;
+          span {
+            flex: 1;
           }
 
           .menu-badge {
@@ -454,20 +483,39 @@
             color: white;
             font-size: 11px;
             font-weight: bold;
-            min-width: 18px;
-            height: 18px;
-            border-radius: 9px;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-left: auto;
+            padding: 0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            aspect-ratio: 1/1;
+          }
+
+          &:hover svg {
+            color: var(--primary-color);
           }
         }
 
-        a:not(:last-child),
-        button:not(:last-child) {
-          border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        .dropdown-divider {
+          height: 1px;
+          margin: 8px 0;
+          background-color: var(--border-color);
+        }
+
+        .logout-item {
+          color: #d32f2f;
+
+          svg {
+            color: #d32f2f;
+          }
+
+          &:hover {
+            background-color: rgba(211, 47, 47, 0.08);
+          }
         }
       }
     }
@@ -492,7 +540,7 @@
     span {
       width: 100%;
       height: 2px;
-      background-color: var(--text-primary);
+      background-color: white;
       border-radius: 2px;
       transition: all 0.3s;
     }
