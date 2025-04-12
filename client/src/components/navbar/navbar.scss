@@ -56,11 +56,17 @@
       }
     }
 
-    .navbar-logo img {
-      max-height: 70px;
+    .navbar-logo {
+      a {
+        padding: 3px;
+      }
 
-      @include sm {
-        height: 45px;
+      img {
+        max-height: 55px;
+
+        @include sm {
+          max-height: 40px;
+        }
       }
     }
   }
@@ -90,16 +96,27 @@
   a {
     display: flex;
     align-items: center;
+    justify-content: center;
     text-decoration: none;
+    padding: 4px;
+    border-radius: var(--radius-md);
+    background-color: white;
+    transition: all 0.2s ease;
+    overflow: hidden;
+
+    &:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
   }
 
   img {
-    max-height: 90px;
+    max-height: 70px;
     width: auto;
-    transition: max-height 0.3s ease;
+    transition: all 0.3s ease;
 
     @include sm {
-      height: 50px;
+      max-height: 50px;
     }
   }
 }
