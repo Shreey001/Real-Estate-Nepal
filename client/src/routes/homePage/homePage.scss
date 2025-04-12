@@ -487,6 +487,190 @@ $secondary-orange: #f09946;
     }
   }
 
+  // Agents CTA section styles
+  .agents-cta-section {
+    background-color: $light-bg;
+    position: relative;
+
+    &:before,
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        transparent,
+        $section-divider,
+        transparent
+      );
+    }
+
+    &:before {
+      top: 0;
+    }
+
+    .agents-cta-card {
+      display: flex;
+      background: linear-gradient(135deg, #fff, $light-accent);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 15px 30px rgba(12, 95, 143, 0.1);
+      position: relative;
+
+      @include lg {
+        flex-direction: column-reverse;
+      }
+
+      .agents-cta-content {
+        flex: 1;
+        padding: 50px;
+
+        @include md {
+          padding: 40px 30px;
+        }
+
+        @include sm {
+          padding: 30px 20px;
+        }
+
+        h2 {
+          font-size: 32px;
+          font-weight: 700;
+          color: $text-dark;
+          margin-bottom: 20px;
+          position: relative;
+          padding-bottom: 15px;
+
+          &:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background-color: $secondary-orange;
+          }
+
+          @include md {
+            font-size: 28px;
+          }
+
+          @include sm {
+            font-size: 24px;
+          }
+        }
+
+        p {
+          font-size: 16px;
+          line-height: 1.6;
+          color: $text-medium;
+          margin-bottom: 25px;
+          max-width: 500px;
+        }
+
+        .agents-benefits {
+          margin: 30px 0;
+          padding: 0;
+          list-style: none;
+
+          li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+
+            .benefit-icon {
+              width: 28px;
+              height: 28px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 50%;
+              background-color: rgba($primary-blue, 0.1);
+              color: $primary-blue;
+              margin-right: 12px;
+              flex-shrink: 0;
+            }
+
+            span {
+              font-size: 16px;
+              color: $text-dark;
+              font-weight: 500;
+            }
+          }
+        }
+
+        .explore-agents-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          background-color: $primary-blue;
+          color: white;
+          font-weight: 600;
+          padding: 14px 24px;
+          border-radius: 8px;
+          border: none;
+          transition: all 0.3s ease;
+          font-size: 16px;
+          text-decoration: none;
+
+          svg {
+            transition: transform 0.2s ease;
+          }
+
+          &:hover {
+            background-color: darken($primary-blue, 8%);
+            box-shadow: 0 5px 15px rgba($primary-blue, 0.3);
+
+            svg {
+              transform: translateX(4px);
+            }
+          }
+        }
+      }
+
+      .agents-cta-image {
+        position: relative;
+        flex: 0 0 40%;
+        overflow: hidden;
+
+        @include lg {
+          height: 300px;
+        }
+
+        @include sm {
+          height: 220px;
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          transition: transform 0.5s ease;
+        }
+
+        .image-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(
+            to right,
+            rgba($primary-blue, 0.1),
+            rgba($primary-blue, 0.4)
+          );
+        }
+
+        &:hover img {
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+
   // Testimonials section styles
   .testimonials-section {
     background-color: $light-bg;
