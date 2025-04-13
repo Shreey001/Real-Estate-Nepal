@@ -527,7 +527,8 @@ export default function HomePage() {
       <section className="cta-section">
         <div className="section-container cta-container">
           <div className="cta-content">
-            <h2>Have a Property to Sell or Rent?</h2>
+            {/* <h2>Have a Property to Sell or Rent?</h2> */}
+            <h2>घर वा जग्गा बेच्न वा भाडामा दिन चाहनुहुन्छ?</h2>
             <p>
               List your property with us and reach thousands of potential buyers
               and tenants. Our platform offers maximum visibility and connects
