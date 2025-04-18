@@ -1,8 +1,77 @@
 .map {
-  width: 100%;
   height: 100%;
-  border-radius: 20px;
-  z-index: 1; /* Lower z-index to ensure it doesn't overlap navbar */
+  width: 100%;
+  z-index: 0;
+
+  .popup {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    max-width: 300px;
+
+    img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .textContainer {
+      flex: 1;
+
+      h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 8px;
+      }
+
+      p {
+        font-size: 12px;
+        color: #6b7280;
+        margin: 0;
+        margin-bottom: 12px;
+      }
+
+      .view-details-btn {
+        background-color: #4a80f0;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        width: 100%;
+
+        &:hover {
+          background-color: #3b6cdb;
+        }
+
+        &:active {
+          background-color: #2d59c7;
+        }
+      }
+    }
+  }
+}
+
+// Override default Leaflet styles
+:global(.leaflet-popup-content-wrapper) {
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+:global(.leaflet-popup-content) {
+  margin: 0;
+  line-height: 1.4;
+}
+
+:global(.leaflet-container) {
+  font: inherit;
 }
 
 /* Set z-index for Leaflet controls and popups */

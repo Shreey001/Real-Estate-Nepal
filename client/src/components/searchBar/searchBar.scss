@@ -16,12 +16,12 @@
 
   &.all-active {
     .type-selector button.active {
-      background: linear-gradient(to bottom, #3b82f6, #1d4ed8);
+      background: linear-gradient(to bottom, #0f70a8, #0c5f8f);
       color: white;
     }
 
     .search-button button {
-      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      background: linear-gradient(135deg, #0f70a8, #0c5f8f);
       box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 
       &:hover {
