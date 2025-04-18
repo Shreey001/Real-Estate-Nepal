@@ -14,8 +14,17 @@ function ProfilePage() {
   const [chatOpen, setChatOpen] = useState(window.innerWidth > 1200);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const location = useLocation();
-
   const navigate = useNavigate();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Scroll to top when tab changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeTab]);
 
   // Check URL parameters for section focus
   useEffect(() => {
@@ -58,6 +67,12 @@ function ProfilePage() {
 
   const toggleChat = () => {
     setChatOpen(!chatOpen);
+  };
+
+  // Modified to include scroll to top
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    window.scrollTo(0, 0);
   };
 
   const renderList = (resolvedData, type) => {
@@ -112,14 +127,14 @@ function ProfilePage() {
         <div className="tabNavigation">
           <button
             className={`tab ${activeTab === "myProperties" ? "active" : ""}`}
-            onClick={() => setActiveTab("myProperties")}
+            onClick={() => handleTabChange("myProperties")}
           >
             <span className="icon">🏠</span>
             My Properties
           </button>
           <button
             className={`tab ${activeTab === "savedProperties" ? "active" : ""}`}
-            onClick={() => setActiveTab("savedProperties")}
+            onClick={() => handleTabChange("savedProperties")}
           >
             <span className="icon">💾</span>
             Saved Properties
@@ -131,7 +146,7 @@ function ProfilePage() {
                 activeTab === "messages" || chatOpen ? "active" : ""
               }`}
               onClick={() => {
-                setActiveTab("messages");
+                handleTabChange("messages");
                 toggleChat();
               }}
             >
@@ -179,7 +194,7 @@ function ProfilePage() {
             className="closeChat"
             onClick={() => {
               setChatOpen(false);
-              setActiveTab("myProperties");
+              handleTabChange("myProperties");
               // Remove the section parameter from URL
               navigate("/profile", { replace: true });
             }}

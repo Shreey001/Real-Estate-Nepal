@@ -135,6 +135,11 @@ function SinglePage() {
   const navigate = useNavigate();
   const [showChatModal, setShowChatModal] = useState(false);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleSave = useCallback(
     async (post, setSaved) => {
       if (!currentUser) {
@@ -168,6 +173,11 @@ function SinglePage() {
 
   const renderPost = (post) => {
     const [saved, setSaved] = useState(post.isSaved);
+
+    // Scroll to top when post changes
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, [post.id]);
 
     useEffect(() => {
       setSaved(post.isSaved);
