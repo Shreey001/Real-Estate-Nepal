@@ -14,216 +14,89 @@
 
 🌟 A modern real estate platform revolutionizing property search in Nepal with cutting-edge features and stunning UI/UX 🌟
 
-[Demo](https://your-demo-link.com) · [Report Bug](https://github.com/yourusername/nepal-real-estate-app/issues) · [Request Feature](https://github.com/yourusername/nepal-real-estate-app/issues)
+[Demo](https://real-estate-nepal.vercel.app/) · [Report Bug](https://github.com/Shreey001/nepal-real-estate-app/issues) · [Request Feature](https://github.com/Shreey001/nepal-real-estate-app/issues)
 
 </div>
 
-## ✨ Features & Animations
+## ✨ Features
 
-### 🗺️ Interactive Property Map
+- **Interactive Property Map**
 
-- **Smooth Map Interactions**
-  - `Framer Motion` powered zoom and pan animations
-  - Dynamic marker clustering with `react-map-gl`
-  - Real-time location updates with smooth transitions
-  - 3D building renders on hover
+  - Visual property search using an interactive map interface
+  - Location-based property filtering
+  - Neighborhood insights and analytics
 
-### 💬 Real-Time Chat with Style
+- **Real-Time Chat**
 
-- **Modern Chat Interface**
-  - Typing indicators with animated dots
-  - Message delivery status animations
-  - Push notifications with subtle animations
-  - Emoji reactions with pop animations
-  - Voice messages with waveform visualization
+  - Instant messaging between buyers and sellers
+  - Real-time notifications
+  - Chat history preservation
 
-### 🏢 Property Listings
+- **Property Listings**
 
-- **Rich Media Experience**
-  - 360° virtual tours using `react-360`
-  - Image galleries with `react-photo-gallery`
-  - Lazy loading with blur effects
-  - Infinite scroll with skeleton loading
-  - Price history charts using `recharts`
+  - Detailed property information
+  - High-quality image galleries
+  - Advanced search and filtering options
 
-### 👤 User Experience
-
-- **Polished Interactions**
-  - Smooth page transitions with `framer-motion`
-  - Loading states with `react-loading-skeleton`
-  - Toast notifications using `react-hot-toast`
-  - Form validations with animated feedback
-  - Dark/Light theme toggle with transition effects
-
-## 🎨 UI/UX Features
-
-```jsx
-// Example of our animated property card component
-const PropertyCard = ({ property }) => {
-  const animation = {
-    initial: { scale: 0.95, opacity: 0 },
-    animate: { scale: 1, opacity: 1 },
-    transition: { duration: 0.3 },
-  };
-
-  return (
-    <motion.div
-      {...animation}
-      whileHover={{ scale: 1.05 }}
-      className="property-card"
-    >
-      // Property details here
-    </motion.div>
-  );
-};
-```
+- **User Features**
+  - Secure user authentication
+  - Personalized property recommendations
+  - Saved searches and favorites
+  - Property listing management for sellers
 
 ## 🚀 Tech Stack
 
-### Frontend Powerhouse
+- **Frontend**
 
-- **Core**
+  - React 19 (Latest version)
+  - Vite for build tooling
+  - Socket.IO for real-time features
+  - Modern ES Modules
+  - React Icons for UI elements
 
-  - ⚛️ React 19 with Server Components
-  - 📦 Vite for lightning-fast builds
-  - 🎭 Framer Motion for fluid animations
-  - 🎨 Tailwind CSS for styling
-  - 🌐 React Query for data fetching
-
-- **Map & Visualization**
-
-  - 🗺️ Mapbox GL JS
-  - 📊 Recharts for analytics
-  - 🖼️ React Photo Gallery
-  - 🎥 React 360 for virtual tours
-
-- **Real-time Features**
-  - 🔄 Socket.IO Client
-  - 📱 Push Notifications
-  - 💬 WebRTC for video tours
-
-### Backend Architecture
-
-- **Core**
-
-  - 📡 Node.js & Express
-  - 🔒 JWT & BCrypt
-  - 📊 Prisma ORM
-  - 🔄 Socket.IO
-
-- **Database & Storage**
-  - 🗄️ PostgreSQL
-  - ☁️ AWS S3 for media
-  - 🔍 Elasticsearch for search
+- **Backend**
+  - Node.js with Express
+  - Prisma ORM for database management
+  - Socket.IO for real-time communication
+  - JWT for authentication
+  - BCrypt for password hashing
 
 ## 🛠️ Installation
 
-1. **Clone the repository:**
+1. Clone the repository:
 
    ```bash
    git clone https://github.com/yourusername/nepal-real-estate-app.git
-   cd nepal-real-estate-app
    ```
 
-2. **Set up environment variables:**
-
-   ```bash
-   # Backend .env
-   DATABASE_URL="postgresql://user:password@localhost:5432/realestate"
-   JWT_SECRET="your-secret-key"
-   MAPBOX_TOKEN="your-mapbox-token"
-   AWS_ACCESS_KEY="your-aws-key"
-
-   # Frontend .env
-   VITE_API_URL="http://localhost:3000"
-   VITE_MAPBOX_TOKEN="your-public-mapbox-token"
-   ```
-
-3. **Install dependencies:**
+2. Install dependencies for both backend and frontend:
 
    ```bash
    # Install backend dependencies
    npm install
 
    # Install frontend dependencies
-   cd client && npm install
+   cd client
+   npm install
    ```
 
-4. **Start development servers:**
+3. Set up environment variables:
+   Create `.env` files in both root and client directories with necessary configurations.
+
+4. Run the development servers:
 
    ```bash
-   # Terminal 1 - Backend
+   # Run backend (from root directory)
    npm run dev
 
-   # Terminal 2 - Frontend
-   cd client && npm run dev
+   # Run frontend (from client directory)
+   npm run dev
    ```
 
-## 📱 Responsive Design
+## 💡 Contributing
 
-The app is fully responsive with carefully crafted breakpoints:
-
-- 📱 Mobile: 320px - 480px
-- 📱 Mobile Landscape: 481px - 767px
-- 💻 Tablet: 768px - 1024px
-- 🖥️ Desktop: 1025px+
-
-## 🎯 Performance Optimizations
-
-- ⚡ Lazy loading of images and components
-- 🔄 Efficient data caching with React Query
-- 📦 Code splitting by route
-- 🖼️ WebP image format with fallbacks
-- 🚀 Optimized asset delivery via CDN
-
-## 🔐 Security Features
-
-- 🔒 JWT with refresh tokens
-- 🛡️ CSRF protection
-- 🔐 Rate limiting
-- 📝 Input sanitization
-- 🔍 SQL injection prevention
-
-## 📈 Analytics Integration
-
-- 📊 Google Analytics 4
-- 🎯 Custom event tracking
-- 📱 User behavior analysis
-- 🔍 SEO optimization
-- 📈 Performance monitoring
-
-## 🤝 Contributing
-
-We ❤️ contributions! Please check our [Contributing Guidelines](CONTRIBUTING.md) before making a pull request.
-
-<div align="center">
-
-[![Contributors](https://contrib.rocks/image?repo=yourusername/nepal-real-estate-app)](https://github.com/yourusername/nepal-real-estate-app/graphs/contributors)
-
-</div>
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🌟 Support
-
-⭐️ Star this repo if you found it helpful!
-
-## 📞 Contact
-
-For any queries or suggestions:
-
-- 📧 Email: your.email@example.com
-- 💬 Discord: [Join our server](https://discord.gg/your-server)
-- 🐦 Twitter: [@yourhandle](https://twitter.com/yourhandle)
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-<div align="center">
-
 Made with ❤️ for Nepal's Real Estate Market
-
-[⬆ Back to Top](#-nepal-real-estate-app)
-
-</div>
