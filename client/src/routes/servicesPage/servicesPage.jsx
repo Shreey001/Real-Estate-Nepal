@@ -1,9 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./servicesPage.scss";
 
 function ServicesPage() {
   const [activeCategory, setActiveCategory] = useState("all");
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Scroll to top when category changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeCategory]);
+
+  // Handle category change with scroll to top
+  const handleCategoryChange = (categoryId) => {
+    setActiveCategory(categoryId);
+    window.scrollTo(0, 0);
+  };
 
   const services = [
     {
@@ -160,7 +176,7 @@ function ServicesPage() {
             <button
               key={category.id}
               className={activeCategory === category.id ? "active" : ""}
-              onClick={() => setActiveCategory(category.id)}
+              onClick={() => handleCategoryChange(category.id)}
             >
               {category.name}
             </button>

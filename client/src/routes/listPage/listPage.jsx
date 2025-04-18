@@ -17,6 +17,21 @@ function ListPage() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Scroll to top when search parameters change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [searchParams]);
+
+  // Scroll to top when view mode changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [viewMode]);
+
   // Get the current search query if any
   const searchQuery =
     searchParams.get("city") || searchParams.get("searchTerm") || "";
@@ -85,6 +100,7 @@ function ListPage() {
   // Function to toggle between list and map view on mobile
   const toggleView = (mode) => {
     setViewMode(mode);
+    window.scrollTo(0, 0);
   };
 
   // Filter properties based on URL parameters

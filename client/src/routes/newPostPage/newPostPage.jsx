@@ -1,7 +1,7 @@
 import "./newPostPage.scss";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import apiRequest from "../../lib/apiRequest";
 import UploadWidgets from "../../components/uploadWidgets/UploadWidgets";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,16 @@ function NewPostPage() {
   });
   const [showMap, setShowMap] = useState(false);
   const navigate = useNavigate();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Scroll to top when map view is toggled
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [showMap]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,6 +70,8 @@ function NewPostPage() {
           restaurant: parseFloat(inputs.restaurant),
         },
       });
+      // Scroll to top before navigating
+      window.scrollTo(0, 0);
       navigate("/" + res.data.id);
     } catch (error) {
       setError(
@@ -67,6 +79,8 @@ function NewPostPage() {
           "An error occurred while creating the post"
       );
       console.error("Error details:", error.response?.data);
+      // Scroll to top to show error message
+      window.scrollTo(0, 0);
     }
   };
 
@@ -104,6 +118,12 @@ function NewPostPage() {
         neighborhood: locationData.neighborhood || "",
       });
     }
+  };
+
+  // Modified to include scroll to top when toggling map
+  const handleMapToggle = () => {
+    setShowMap(!showMap);
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -308,7 +328,7 @@ function NewPostPage() {
                   <button
                     type="button"
                     className={`toggle-map-btn ${showMap ? "active" : ""}`}
-                    onClick={() => setShowMap(!showMap)}
+                    onClick={handleMapToggle}
                   >
                     <span className="icon">{showMap ? "🗺️" : "📍"}</span>
                     {showMap

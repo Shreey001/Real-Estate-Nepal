@@ -25,6 +25,16 @@ function AgentsPage() {
   const [selectedSort, setSelectedSort] = useState("rating");
   const searchRef = useRef(null);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Scroll to top when view mode or sort option changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [selectedView, selectedSort]);
+
   // Fetch agents from the API
   useEffect(() => {
     const fetchAgents = async () => {
@@ -72,6 +82,8 @@ function AgentsPage() {
     }
 
     setFilteredAgents(result);
+    // Scroll to top when search results change
+    window.scrollTo(0, 0);
   }, [searchTerm, agents, selectedSort]);
 
   const handleSearchFocus = () => {
@@ -82,9 +94,25 @@ function AgentsPage() {
 
   const clearSearch = () => {
     setSearchTerm("");
+    window.scrollTo(0, 0);
     if (searchRef.current) {
       searchRef.current.focus();
     }
+  };
+
+  const handleViewChange = (view) => {
+    setSelectedView(view);
+    window.scrollTo(0, 0);
+  };
+
+  const handleSortChange = (sort) => {
+    setSelectedSort(sort);
+    window.scrollTo(0, 0);
+  };
+
+  const handleAgentSelect = (agent) => {
+    setSelectedAgent(agent);
+    // No scroll to top here as we're showing a modal
   };
 
   return (
@@ -131,7 +159,7 @@ function AgentsPage() {
                       type="radio"
                       name="sort"
                       checked={selectedSort === "rating"}
-                      onChange={() => setSelectedSort("rating")}
+                      onChange={() => handleSortChange("rating")}
                     />
                     <span>Rating</span>
                   </label>
@@ -142,7 +170,7 @@ function AgentsPage() {
                       type="radio"
                       name="sort"
                       checked={selectedSort === "experience"}
-                      onChange={() => setSelectedSort("experience")}
+                      onChange={() => handleSortChange("experience")}
                     />
                     <span>Experience</span>
                   </label>
@@ -153,7 +181,7 @@ function AgentsPage() {
                       type="radio"
                       name="sort"
                       checked={selectedSort === "listings"}
-                      onChange={() => setSelectedSort("listings")}
+                      onChange={() => handleSortChange("listings")}
                     />
                     <span>Listings</span>
                   </label>
@@ -165,13 +193,13 @@ function AgentsPage() {
                 <div className="view-options">
                   <button
                     className={selectedView === "grid" ? "active" : ""}
-                    onClick={() => setSelectedView("grid")}
+                    onClick={() => handleViewChange("grid")}
                   >
                     Grid
                   </button>
                   <button
                     className={selectedView === "list" ? "active" : ""}
-                    onClick={() => setSelectedView("list")}
+                    onClick={() => handleViewChange("list")}
                   >
                     List
                   </button>
@@ -216,7 +244,7 @@ function AgentsPage() {
                 className={`agent-card ${
                   selectedView === "list" ? "list-view" : ""
                 }`}
-                onClick={() => setSelectedAgent(agent)}
+                onClick={() => handleAgentSelect(agent)}
               >
                 <div className="agent-photo">
                   <img
